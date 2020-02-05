@@ -1,10 +1,14 @@
 import axios from "axios";
 
+/**
+ * Dashboard component API
+ */
 export default {
   dashboard: {
-    getErrorRate: payload => axios.get(``).then(res => res.data),
-    getLatency: payload => axios.get(``).then(res => res.data),
-    getTotalUsers: payload => axios.get(``).then(res => res.data),
-    getErrorBudget: payload => axios.get(``).then(res => res.data)
+    fetchtErrorRate: payload => axios.get(``).then(res => res.data),
+    fetchtLatency: payload => axios.get(``).then(res => res.data),
+    fetchtTotalUsers: payload => axios.get(``).then(res => res.data),
+    fetchtErrorBudget: payload => axios.get(``).then(res => res.data),
+    fetchtJiraTickets: payload => axios.post(``).then(res => res.data)
   }
 };

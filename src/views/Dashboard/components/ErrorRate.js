@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 const ErrorRate = ({ errorRate, fetchErrorRate }) => {
   useEffect(() => {
     fetchErrorRate();
-  });
+  }, [fetchErrorRate]);
   return (
     <MetricCard
       useStyles={useStyles}

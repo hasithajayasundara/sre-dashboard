@@ -53,7 +53,8 @@ const useStyles = makeStyles(theme => ({
 const ErrorBudget = ({ errorBudget, fetchErrorBudget }) => {
   useEffect(() => {
     fetchErrorBudget();
-  });
+  }, [fetchErrorBudget]);
+
   return (
     <MetricCard
       useStyles={useStyles}

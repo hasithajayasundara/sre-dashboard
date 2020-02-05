@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 const Latency = ({ latency, fetchLatency }) => {
   useEffect(() => {
     fetchLatency();
-  });
+  }, [fetchLatency]);
   return (
     <MetricCard
       useStyles={useStyles}

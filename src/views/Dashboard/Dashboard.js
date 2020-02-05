@@ -9,7 +9,8 @@ import ErrorBudget from "./components/ErrorBudget";
 import LatestSales from "./components/LatestSales/LatestSales";
 import UsersByDevice from "./components/LatestSales/LatestSales";
 import LatestProducts from "./components/LatestProducts/LatestProducts";
-import LatestOrders from "./components/LatestOrders/LatestOrders";
+import LatestOrders from "./components/MSRJiraTickets";
+import MSRJiraTickets from "./components/MSRJiraTickets";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,7 +46,7 @@ const Dashboard = () => {
           <LatestProducts />
         </Grid>
         <Grid item lg={8} md={12} xl={9} xs={12}>
-          <LatestOrders />
+          <MSRJiraTickets />
         </Grid>
       </Grid>
     </div>

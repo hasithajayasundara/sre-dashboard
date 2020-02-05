@@ -6,7 +6,10 @@ import {
   FETCH_ERROR_RATE_FAILED,
   FETCH_LATENCY_FAILED,
   FETCH_TOTAL_USERS_FAILED,
-  FETCH_ERROR_BUDGET_FAILED
+  FETCH_ERROR_BUDGET_FAILED,
+  FETCH_JIRA_TICKETS_FAILED,
+  FETCH_JIRA_TICKETS_SUCCESS,
+  CHANGE_JIRA_TICKET_FILTER
 } from "../actions/types";
 
 const initialState = {
@@ -47,6 +50,13 @@ const initialState = {
         slope: -1
       }
     }
+  },
+  jira: {
+    fetching: true,
+    error: null,
+    total: 100,
+    filter: { skip: 0, limit: 10, createdDate: "desc", status: [] },
+    tickets: []
   }
 };
 
@@ -68,7 +78,7 @@ const dashboardReducer = (state = initialState, action) => {
       };
     case FETCH_ERROR_RATE_FAILED:
       errorRate.fetching = false;
-      errorRate.error = "An error occured.";
+      errorRate.error = "An error occured while fetching data.";
       return {
         ...state,
         metrics: {
@@ -88,7 +98,7 @@ const dashboardReducer = (state = initialState, action) => {
       };
     case FETCH_LATENCY_FAILED:
       latency.fetching = false;
-      latency.error = "An error occured while fetching latency";
+      latency.error = "An error occured while fetching data.";
       return {
         ...state,
         metrics: {
@@ -108,7 +118,7 @@ const dashboardReducer = (state = initialState, action) => {
       };
     case FETCH_TOTAL_USERS_FAILED:
       totalUsers.fetching = false;
-      totalUsers.error = "An error occured while fetching total users.";
+      totalUsers.error = "An error occured while fetching data.";
       return {
         ...state,
         metrics: {
@@ -128,12 +138,40 @@ const dashboardReducer = (state = initialState, action) => {
       };
     case FETCH_ERROR_BUDGET_FAILED:
       errorBudget.fetching = false;
-      totalUsers.error = "An error occured.";
+      totalUsers.error = "An error occured while fetching data.";
       return {
         ...state,
         metrics: {
           ...state.metrics,
           errorBudget
+        }
+      };
+    case FETCH_JIRA_TICKETS_SUCCESS:
+      return {
+        ...state,
+        jira: {
+          ...state.jira,
+          tickets: action.payload,
+          fetching: false,
+          error: null
+        }
+      };
+    case FETCH_JIRA_TICKETS_FAILED:
+      return {
+        ...state,
+        jira: {
+          ...state.jira,
+          fetching: false,
+          error: "An error occured while fetching data."
+        }
+      };
+    case CHANGE_JIRA_TICKET_FILTER:
+      return {
+        ...state,
+        jira: {
+          ...state.jira,
+          fetching: true,
+          filter: { ...state.jira.filter, ...action.payload }
         }
       };
     default:

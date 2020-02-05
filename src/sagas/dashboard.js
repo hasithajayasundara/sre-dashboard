@@ -1,7 +1,17 @@
-import { call, all, takeEvery, put, delay } from "redux-saga/effects";
+import {
+  call,
+  all,
+  takeEvery,
+  put,
+  delay,
+  takeLatest
+} from "redux-saga/effects";
 import dashboardApi from "../services/dashboardApi";
 
-import { FETCH_ERROR_RATE } from "../actions/types";
+import { FETCH_ERROR_RATE, FETCH_JIRA_TICKETS } from "../actions/types";
+
+// Remove this when backend API completed
+import data from "../mock/data";
 
 import {
   fetchErrorRateSuccess,
@@ -11,12 +21,18 @@ import {
   fetchTotalUsersSuccess,
   fetchTotalUsersFailed,
   fetchLatencySuccess,
-  fetchLatencyFailed
+  fetchLatencyFailed,
+  fetchJiraTicketsSuccess,
+  fetchJiraTicketsFailed
 } from "../actions/dashboard";
+
+/**
+ * Dashboard Saga Implementation
+ */
 
 function* fetchErrorRateSaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.getErrorRate);
+    // const data = yield call(dashboardApi.dashboard.fetchtErrorRate);
     yield delay(5000);
     yield put(fetchErrorRateSuccess());
   } catch (err) {
@@ -26,7 +42,7 @@ function* fetchErrorRateSaga() {
 
 function* fetchLatencySaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.getLatency);
+    // const data = yield call(dashboardApi.dashboard.fetchtLatency);
     yield delay(2000);
     yield put(fetchLatencySuccess());
   } catch (err) {
@@ -37,7 +53,7 @@ function* fetchLatencySaga() {
 function* fetchTotalUsersSaga() {
   try {
     yield delay(8000);
-    const data = yield call(dashboardApi.dashboard.getTotalUsers);
+    const data = yield call(dashboardApi.dashboard.fetchtTotalUsers);
     yield put(fetchTotalUsersSuccess());
   } catch (err) {
     yield put(fetchTotalUsersFailed());
@@ -46,7 +62,7 @@ function* fetchTotalUsersSaga() {
 
 function* fetchErrorBudgetSaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.getErrorBudget);
+    // const data = yield call(dashboardApi.dashboard.fetchtErrorBudget);
     yield delay(4000);
     yield put(fetchErrorBudgetSuccess());
   } catch (err) {
@@ -54,27 +70,42 @@ function* fetchErrorBudgetSaga() {
   }
 }
 
-function* watchGetErrorRate() {
+function* fetchJiraTicketsSaga() {
+  try {
+    // const data = yield call(dashboardApi.dashboard.fetchtJiraTickets);
+    yield delay(5000);
+    yield put(fetchJiraTicketsSuccess(data));
+  } catch (err) {
+    yield put(fetchJiraTicketsFailed());
+  }
+}
+
+function* watchFetchErrorRate() {
   yield takeEvery(FETCH_ERROR_RATE, fetchErrorRateSaga);
 }
 
-function* watchGetLatency() {
+function* watchFetchLatency() {
   yield takeEvery(FETCH_ERROR_RATE, fetchLatencySaga);
 }
 
-function* watchGetTotalUsers() {
+function* watchFetchTotalUsers() {
   yield takeEvery(FETCH_ERROR_RATE, fetchTotalUsersSaga);
 }
 
-function* watchGetErrorBudget() {
+function* watchFetchErrorBudget() {
   yield takeEvery(FETCH_ERROR_RATE, fetchErrorBudgetSaga);
+}
+
+function* watchFetchJiraTickets() {
+  yield takeLatest(FETCH_JIRA_TICKETS, fetchJiraTicketsSaga);
 }
 
 export default function* dashboardSaga() {
   yield all([
-    watchGetErrorRate(),
-    watchGetLatency(),
-    watchGetTotalUsers(),
-    watchGetErrorBudget()
+    watchFetchErrorRate(),
+    watchFetchLatency(),
+    watchFetchTotalUsers(),
+    watchFetchErrorBudget(),
+    watchFetchJiraTickets()
   ]);
 }

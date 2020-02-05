@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
 const TotalUsers = ({ totalUsers, fetchTotalUsers }) => {
   useEffect(() => {
     fetchTotalUsers();
-  });
+  }, [fetchTotalUsers]);
   return (
     <MetricCard
       useStyles={useStyles}
