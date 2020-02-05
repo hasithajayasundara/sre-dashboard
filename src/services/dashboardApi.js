@@ -2,9 +2,9 @@ import axios from "axios";
 
 export default {
   dashboard: {
-    getPosts: () =>
-      axios
-        .get(`https://jsonplaceholder.typicode.com/posts`)
-        .then(res => res.data)
+    getErrorRate: payload => axios.get(``).then(res => res.data),
+    getLatency: payload => axios.get(``).then(res => res.data),
+    getTotalUsers: payload => axios.get(``).then(res => res.data),
+    getErrorBudget: payload => axios.get(``).then(res => res.data)
   }
 };

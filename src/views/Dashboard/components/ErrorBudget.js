@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import MetricCard from "../common/MetricCard";
 import InsertChartIcon from "@material-ui/icons/InsertChartOutlined";
+import { connect } from "react-redux";
+
+import { fetchErrorBudget } from "../../../actions/dashboard";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,12 +50,29 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ErrorBudget = () => {
+const ErrorBudget = ({ errorBudget, fetchErrorBudget }) => {
+  useEffect(() => {
+    fetchErrorBudget();
+  });
   return (
-    <MetricCard useStyles={useStyles} variant="99.5%" title="ERROR BUDGET">
+    <MetricCard
+      useStyles={useStyles}
+      variant="99.5%"
+      title="ERROR BUDGET"
+      fetching={errorBudget.fetching}
+      error={errorBudget.error}
+      spinnerColor="inherit"
+    >
       <InsertChartIcon />
     </MetricCard>
   );
 };
 
-export default ErrorBudget;
+function mapStateToProps({ dashboard }) {
+  return { errorBudget: dashboard.metrics.errorBudget };
+}
+
+export default connect(
+  mapStateToProps,
+  { fetchErrorBudget }
+)(ErrorBudget);

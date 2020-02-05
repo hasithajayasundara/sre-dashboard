@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import MetricCard from "../common/MetricCard";
 import InsertChartIcon from "@material-ui/icons/InsertChartOutlined";
+import { connect } from "react-redux";
+
+import { fetchLatency } from "../../../actions/dashboard";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,12 +42,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Latency = () => {
+const Latency = ({ latency, fetchLatency }) => {
+  useEffect(() => {
+    fetchLatency();
+  });
   return (
-    <MetricCard useStyles={useStyles} variant="99.5%" title="LATENCY">
+    <MetricCard
+      useStyles={useStyles}
+      variant="99.5%"
+      title="LATENCY"
+      fetching={latency.fetching}
+      error={latency.error}
+    >
       <InsertChartIcon />
     </MetricCard>
   );
 };
 
-export default Latency;
+function mapStateToProps({ dashboard }) {
+  return { latency: dashboard.metrics.latency };
+}
+
+export default connect(
+  mapStateToProps,
+  { fetchLatency }
+)(Latency);

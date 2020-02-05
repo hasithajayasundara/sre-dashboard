@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Grid } from "@material-ui/core";
-import { connect } from "react-redux";
-
-import { getPosts } from "../../actions/dashboard";
 
 import ErrorRate from "./components/ErrorRate";
 import TotalUsers from "./components/TotalUsers";
@@ -20,12 +17,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Dashboard = props => {
+const Dashboard = () => {
   const classes = useStyles();
-
-  useEffect(() => {
-    props.getPosts();
-  });
 
   return (
     <div className={classes.root}>
@@ -59,7 +52,4 @@ const Dashboard = props => {
   );
 };
 
-export default connect(
-  null,
-  { getPosts }
-)(Dashboard);
+export default Dashboard;

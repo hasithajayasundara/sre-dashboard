@@ -1,9 +1,19 @@
 import React from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Card, CardContent, Grid, Typography, Avatar } from "@material-ui/core";
+import {
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  Avatar,
+  Tooltip,
+  CircularProgress
+} from "@material-ui/core";
+
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const MetricCard = props => {
   const classes = props.useStyles();
@@ -17,7 +27,7 @@ const MetricCard = props => {
               {props.title}
             </Typography>
             <Typography variant="h3" className={classes.variant}>
-              {props.variant}
+              {props.fetching ? "" : props.error ? "" : props.variant}
             </Typography>
           </Grid>
           <Grid item>
@@ -33,13 +43,30 @@ const MetricCard = props => {
           </Grid>
         </Grid>
         <div className={classes.difference}>
-          <ArrowDownwardIcon className={classes.differenceIcon} />
-          <Typography className={classes.differenceValue} variant="body2">
-            5%
-          </Typography>
-          <Typography className={classes.caption} variant="caption">
-            Since last month
-          </Typography>
+          {props.fetching ? (
+            <CircularProgress
+              color={props.spinnerColor ? props.spinnerColor : "primary"}
+            />
+          ) : props.error ? (
+            <React.Fragment>
+              <Tooltip title={props.error}>
+                <ErrorIcon color="error"></ErrorIcon>
+              </Tooltip>
+              <Typography className={classes.error} variant="caption">
+                {props.error}
+              </Typography>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <ArrowDownwardIcon className={classes.differenceIcon} />
+              <Typography className={classes.differenceValue} variant="body2">
+                5%
+              </Typography>
+              <Typography className={classes.caption} variant="caption">
+                Since last month
+              </Typography>
+            </React.Fragment>
+          )}
         </div>
       </CardContent>
     </Card>

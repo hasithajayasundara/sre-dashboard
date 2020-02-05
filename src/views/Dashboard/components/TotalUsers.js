@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
+import { connect } from "react-redux";
+
 import MetricCard from "../common/MetricCard";
+import { fetchTotalUsers } from "../../../actions/dashboard";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,17 +36,32 @@ const useStyles = makeStyles(theme => ({
   differenceValue: {
     color: theme.palette.success.dark,
     marginRight: theme.spacing(1)
+  },
+  error: {
+    color: "red"
   }
 }));
 
-const TotalUsers = () => {
+const TotalUsers = ({ totalUsers, fetchTotalUsers }) => {
+  useEffect(() => {
+    fetchTotalUsers();
+  });
   return (
     <MetricCard
       useStyles={useStyles}
       variant="99.5%"
       title="TOTAL USERS"
+      fetching={totalUsers.fetching}
+      error={totalUsers.error}
     ></MetricCard>
   );
 };
 
-export default TotalUsers;
+function mapStateToProps({ dashboard }) {
+  return { totalUsers: dashboard.metrics.totalUsers };
+}
+
+export default connect(
+  mapStateToProps,
+  { fetchTotalUsers }
+)(TotalUsers);

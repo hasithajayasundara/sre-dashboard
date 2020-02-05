@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
+import { connect } from "react-redux";
 
+import { fetchErrorRate } from "../../../actions/dashboard";
 import MetricCard from "../common/MetricCard";
 
 const useStyles = makeStyles(theme => ({
@@ -34,17 +36,31 @@ const useStyles = makeStyles(theme => ({
   differenceValue: {
     color: theme.palette.error.dark,
     marginRight: theme.spacing(1)
+  },
+  error: {
+    color: "red"
   }
 }));
 
-const ErrorRate = () => {
+const ErrorRate = ({ errorRate, fetchErrorRate }) => {
+  useEffect(() => {
+    fetchErrorRate();
+  });
   return (
     <MetricCard
       useStyles={useStyles}
       variant="99.5%"
       title="ERROR RATE"
+      fetching={errorRate.fetching}
     ></MetricCard>
   );
 };
 
-export default ErrorRate;
+function mapStateToProps({ dashboard }) {
+  return { errorRate: dashboard.metrics.errorRate };
+}
+
+export default connect(
+  mapStateToProps,
+  { fetchErrorRate }
+)(ErrorRate);
