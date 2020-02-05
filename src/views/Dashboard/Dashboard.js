@@ -5,16 +5,14 @@ import { connect } from "react-redux";
 
 import { getPosts } from "../../actions/dashboard";
 
-import {
-  Budget,
-  TotalUsers,
-  TasksProgress,
-  TotalProfit,
-  LatestSales,
-  UsersByDevice,
-  LatestProducts,
-  LatestOrders
-} from "./components";
+import ErrorRate from "./components/ErrorRate";
+import TotalUsers from "./components/TotalUsers";
+import Latency from "./components/Latency";
+import ErrorBudget from "./components/ErrorBudget";
+import LatestSales from "./components/LatestSales/LatestSales";
+import UsersByDevice from "./components/LatestSales/LatestSales";
+import LatestProducts from "./components/LatestProducts/LatestProducts";
+import LatestOrders from "./components/LatestOrders/LatestOrders";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,16 +31,16 @@ const Dashboard = props => {
     <div className={classes.root}>
       <Grid container spacing={4}>
         <Grid item lg={3} sm={6} xl={3} xs={12}>
-          <Budget />
+          <ErrorRate />
         </Grid>
         <Grid item lg={3} sm={6} xl={3} xs={12}>
-          <TasksProgress />
+          <Latency />
         </Grid>
         <Grid item lg={3} sm={6} xl={3} xs={12}>
           <TotalUsers />
         </Grid>
         <Grid item lg={3} sm={6} xl={3} xs={12}>
-          <TotalProfit />
+          <ErrorBudget />
         </Grid>
         <Grid item lg={8} md={12} xl={9} xs={12}>
           <LatestSales />
