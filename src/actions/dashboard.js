@@ -14,7 +14,10 @@ import {
   FETCH_JIRA_TICKETS,
   FETCH_JIRA_TICKETS_FAILED,
   FETCH_JIRA_TICKETS_SUCCESS,
-  CHANGE_JIRA_TICKET_FILTER
+  CHANGE_JIRA_TICKET_FILTER,
+  CHANGE_JIRA_TOCKET_CREATED_DATE,
+  CHANGE_JIRA_TICKET_STATUS,
+  CHANGE_JIRA_TICKET_ROWS_PER_PAGE
 } from "./types";
 
 /**
@@ -81,6 +84,15 @@ export const fetchJiraTicketsSuccess = payload => {
 export const fetchJiraTicketsFailed = payload => {
   return { type: FETCH_JIRA_TICKETS_FAILED, payload };
 };
-export const changeJiraTicketFilter = payload => {
+export const changeJiraTicketPagination = payload => {
   return { type: CHANGE_JIRA_TICKET_FILTER, payload };
+};
+export const changeJiraTicketCreatedDate = payload => {
+  return { type: CHANGE_JIRA_TOCKET_CREATED_DATE, payload };
+};
+export const changeJiraTicketStatus = payload => {
+  return { type: CHANGE_JIRA_TICKET_STATUS, payload };
+};
+export const changeJiraTicketRowsPerPage = payload => {
+  return { type: CHANGE_JIRA_TICKET_ROWS_PER_PAGE, payload };
 };

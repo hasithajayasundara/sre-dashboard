@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const jiraMock = require("./jiraMock");
 
 const app = express();
 app.use(bodyParser.json({ type: "*/*" }));
@@ -53,6 +54,12 @@ app.get("/api/dashboard/metrics/errorBudget", (req, res) => {
         description: "Since last month"
       }
     });
+  }, 2000);
+});
+
+app.post("/api/dashboard/jira/tickets", (req, res) => {
+  setTimeout(() => {
+    res.send(jiraMock);
   }, 2000);
 });
 

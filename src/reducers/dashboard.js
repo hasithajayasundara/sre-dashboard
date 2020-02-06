@@ -9,7 +9,9 @@ import {
   FETCH_ERROR_BUDGET_FAILED,
   FETCH_JIRA_TICKETS_FAILED,
   FETCH_JIRA_TICKETS_SUCCESS,
-  CHANGE_JIRA_TICKET_FILTER
+  CHANGE_JIRA_TICKET_FILTER,
+  CHANGE_JIRA_TOCKET_CREATED_DATE,
+  CHANGE_JIRA_TICKET_ROWS_PER_PAGE
 } from "../actions/types";
 import ErrorBudget from "views/Dashboard/components/ErrorBudget";
 
@@ -59,8 +61,8 @@ const initialState = {
   jira: {
     fetching: true,
     error: null,
-    total: 100,
-    filter: { skip: 0, limit: 10, createdDate: "desc", status: [] },
+    total: 0,
+    filter: { skip: 0, limit: 10, dateOrder: "desc", status: [] },
     tickets: []
   }
 };
@@ -164,11 +166,13 @@ const dashboardReducer = (state = initialState, action) => {
         }
       };
     case FETCH_JIRA_TICKETS_SUCCESS:
+      let { total, tickets } = action.payload;
       return {
         ...state,
         jira: {
           ...state.jira,
-          tickets: action.payload,
+          total: total || 0,
+          tickets: tickets || [],
           fetching: false,
           error: null
         }
@@ -188,7 +192,28 @@ const dashboardReducer = (state = initialState, action) => {
         jira: {
           ...state.jira,
           fetching: true,
-          filter: { ...state.jira.filter, ...action.payload }
+          filter: { ...state.jira.filter, skip: action.payload }
+        }
+      };
+    case CHANGE_JIRA_TOCKET_CREATED_DATE:
+      return {
+        ...state,
+        jira: {
+          ...state.jira,
+          fetching: true,
+          filter: { skip: 0, limit: 10, dateOrder: action.payload }
+        }
+      };
+    case CHANGE_JIRA_TICKET_ROWS_PER_PAGE:
+      return {
+        ...state,
+        jira: {
+          ...state.jira,
+          fetching: true,
+          filter: {
+            ...state.jira.filter,
+            limit: action.payload
+          }
         }
       };
     default:

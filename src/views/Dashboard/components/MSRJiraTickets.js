@@ -18,15 +18,21 @@ import {
   TableRow,
   Tooltip,
   TableSortLabel,
-  LinearProgress
+  LinearProgress,
+  Typography
 } from "@material-ui/core";
+import TablePagination from "@material-ui/core/TablePagination";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import { connect } from "react-redux";
 
 import { StatusBullet } from "components";
 import {
   fetchJiraTickets,
-  changeJiraTicketFilter
+  changeJiraTicketPagination,
+  changeJiraTicketCreatedDate,
+  changeJiraTicketStatus,
+  changeJiraTicketRowsPerPage
 } from "../../../actions/dashboard";
 
 const useStyles = makeStyles(theme => ({
@@ -63,7 +69,9 @@ const MSRJiraTickets = ({
   fetching,
   error,
   fetchJiraTickets,
-  changeJiraTicketFilter
+  changeJiraTicketPagination,
+  changeJiraTicketCreatedDate,
+  changeJiraTicketRowsPerPage
 }) => {
   const classes = useStyles();
 
@@ -71,7 +79,7 @@ const MSRJiraTickets = ({
     fetchJiraTickets(filter);
   }, [fetchJiraTickets, filter]);
 
-  let { skip, limit, createdDate, status } = filter;
+  let { skip, limit, dateOrder, status } = filter;
 
   return (
     <Card className={clsx(classes.root)}>
@@ -90,7 +98,15 @@ const MSRJiraTickets = ({
                     <TableCell>Title</TableCell>
                     <TableCell sortDirection="desc">
                       <Tooltip enterDelay={300} title="Sort">
-                        <TableSortLabel active direction="desc">
+                        <TableSortLabel
+                          active
+                          direction={dateOrder}
+                          onClick={() =>
+                            changeJiraTicketCreatedDate(
+                              dateOrder === "asc" ? "desc" : "asc"
+                            )
+                          }
+                        >
                           Created Date
                         </TableSortLabel>
                       </Tooltip>
@@ -125,20 +141,17 @@ const MSRJiraTickets = ({
         </PerfectScrollbar>
       </CardContent>
       <Divider />
-      <CardActions className={classes.actions}>
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-          onClick={() =>
-            skip * limit < total
-              ? changeJiraTicketFilter({ skip: skip + 1 })
-              : ""
-          }
-        >
-          Next <ArrowRightIcon />
-        </Button>
-      </CardActions>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={total}
+        rowsPerPage={limit}
+        page={skip}
+        onChangePage={(event, newPage) => changeJiraTicketPagination(newPage)}
+        onChangeRowsPerPage={event =>
+          changeJiraTicketRowsPerPage(parseInt(event.target.value, 10))
+        }
+      />
     </Card>
   );
 };
@@ -160,5 +173,11 @@ function mapStateToProps({ dashboard }) {
 
 export default connect(
   mapStateToProps,
-  { fetchJiraTickets, changeJiraTicketFilter }
+  {
+    fetchJiraTickets,
+    changeJiraTicketPagination,
+    changeJiraTicketCreatedDate,
+    changeJiraTicketStatus,
+    changeJiraTicketRowsPerPage
+  }
 )(MSRJiraTickets);

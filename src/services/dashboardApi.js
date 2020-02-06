@@ -5,25 +5,30 @@ import axios from "axios";
  */
 
 const DASHBOARD_PREFIX = "/api/dashboard";
+const METRICS_PREFIX = "/metrics";
+const JIRA_PREFIX = "/jira";
 
 export default {
   dashboard: {
     fetchtErrorRate: payload =>
       axios
-        .get(`${DASHBOARD_PREFIX}/metrics/errorRate?${payload}`)
+        .get(`${DASHBOARD_PREFIX}${METRICS_PREFIX}/errorRate?${payload}`)
         .then(res => res.data),
     fetchtLatency: payload =>
       axios
-        .get(`${DASHBOARD_PREFIX}/metrics/latency${payload}`)
+        .get(`${DASHBOARD_PREFIX}${METRICS_PREFIX}/latency${payload}`)
         .then(res => res.data),
     fetchtTotalUsers: payload =>
       axios
-        .get(`${DASHBOARD_PREFIX}/metrics/totalUsers${payload}`)
+        .get(`${DASHBOARD_PREFIX}${METRICS_PREFIX}/totalUsers${payload}`)
         .then(res => res.data),
     fetchtErrorBudget: payload =>
       axios
-        .get(`${DASHBOARD_PREFIX}/metrics/errorBudget${payload}`)
+        .get(`${DASHBOARD_PREFIX}${METRICS_PREFIX}/errorBudget${payload}`)
         .then(res => res.data),
-    fetchtJiraTickets: payload => axios.post(``).then(res => res.data)
+    fetchtJiraTickets: payload =>
+      axios
+        .post(`${DASHBOARD_PREFIX}${JIRA_PREFIX}/tickets`, payload)
+        .then(res => res.data)
   }
 };

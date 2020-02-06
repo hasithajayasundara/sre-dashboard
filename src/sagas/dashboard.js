@@ -12,9 +12,6 @@ import dashboardApi from "../services/dashboardApi";
 
 import { FETCH_ERROR_RATE, FETCH_JIRA_TICKETS } from "../actions/types";
 
-// Remove this when backend API completed
-import data from "../mock/data";
-
 import {
   fetchErrorRateSuccess,
   fetchErrorRateFailed,
@@ -89,14 +86,16 @@ function* fetchErrorBudgetSaga() {
   }
 }
 
-function* fetchJiraTicketsSaga() {
+function* fetchJiraTicketsSaga({ payload }) {
+  let payloadCopy = { ...payload };
+  let { skip, limit } = { ...payloadCopy };
+  payloadCopy.skip = skip * limit;
   try {
-    // const data = yield call(
-    //   dashboardApi.dashboard.fetchtJiraTickets,
-    //   metricsRequestParams()
-    // );
-    yield delay(5000);
-    yield put(fetchJiraTicketsSuccess(data));
+    const data = yield call(
+      dashboardApi.dashboard.fetchtJiraTickets,
+      payloadCopy
+    );
+    yield put(fetchJiraTicketsSuccess(data || {}));
   } catch (err) {
     yield put(fetchJiraTicketsFailed());
   }
