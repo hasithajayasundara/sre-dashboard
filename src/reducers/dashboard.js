@@ -11,6 +11,7 @@ import {
   FETCH_JIRA_TICKETS_SUCCESS,
   CHANGE_JIRA_TICKET_FILTER
 } from "../actions/types";
+import ErrorBudget from "views/Dashboard/components/ErrorBudget";
 
 const initialState = {
   metrics: {
@@ -20,7 +21,8 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     },
     latency: {
@@ -29,7 +31,8 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     },
     totalUsers: {
@@ -38,7 +41,8 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     },
     errorBudget: {
@@ -47,7 +51,8 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     }
   },
@@ -73,7 +78,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          errorRate
+          errorRate: {
+            ...errorRate,
+            ...action.payload
+          }
         }
       };
     case FETCH_ERROR_RATE_FAILED:
@@ -93,7 +101,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          latency
+          latency: {
+            ...latency,
+            ...action.payload
+          }
         }
       };
     case FETCH_LATENCY_FAILED:
@@ -113,7 +124,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          totalUsers
+          totalUsers: {
+            ...totalUsers,
+            ...action.payload
+          }
         }
       };
     case FETCH_TOTAL_USERS_FAILED:
@@ -133,7 +147,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          errorBudget
+          errorBudget: {
+            ...ErrorBudget,
+            ...action.payload
+          }
         }
       };
     case FETCH_ERROR_BUDGET_FAILED:

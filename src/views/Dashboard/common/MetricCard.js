@@ -12,22 +12,56 @@ import {
 } from "@material-ui/core";
 
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import ErrorIcon from "@material-ui/icons/Error";
 
+const renderMetricTrend = (trend, classes) => {
+  let { slope = 0, description = "", value = "" } = trend;
+  let text = (
+    <React.Fragment>
+      <Typography
+        className={
+          slope >= 0
+            ? classes.differenceValueSuccess
+            : classes.differenceValueError
+        }
+        variant="body2"
+      >
+        {trend.value || ""}
+      </Typography>
+      <Typography className={classes.caption} variant="caption">
+        {description || ""}
+      </Typography>
+    </React.Fragment>
+  );
+  return (
+    <React.Fragment>
+      {slope < 0 ? (
+        <ArrowDownwardIcon className={classes.differenceIconError} />
+      ) : (
+        <ArrowUpwardIcon
+          className={classes.differenceIconSuccess}
+        ></ArrowUpwardIcon>
+      )}
+      {text}
+    </React.Fragment>
+  );
+};
+
 const MetricCard = props => {
   const classes = props.useStyles();
-
+  let { fetching, error, variant, spinnerColor, title, trend } = props;
   return (
     <Card className={clsx(classes.root)}>
       <CardContent>
         <Grid container justify="space-between">
           <Grid item>
             <Typography className={classes.title} gutterBottom variant="body2">
-              {props.title}
+              {title}
             </Typography>
             <Typography variant="h3" className={classes.variant}>
-              {props.fetching ? "" : props.error ? "" : props.variant}
+              {fetching ? "" : error ? "" : variant}
             </Typography>
           </Grid>
           <Grid item>
@@ -43,11 +77,9 @@ const MetricCard = props => {
           </Grid>
         </Grid>
         <div className={classes.difference}>
-          {props.fetching ? (
-            <CircularProgress
-              color={props.spinnerColor ? props.spinnerColor : "primary"}
-            />
-          ) : props.error ? (
+          {fetching ? (
+            <CircularProgress color={spinnerColor ? spinnerColor : "primary"} />
+          ) : error ? (
             <React.Fragment>
               <Tooltip title={props.error}>
                 <ErrorIcon color="error"></ErrorIcon>
@@ -57,15 +89,7 @@ const MetricCard = props => {
               </Typography>
             </React.Fragment>
           ) : (
-            <React.Fragment>
-              <ArrowDownwardIcon className={classes.differenceIcon} />
-              <Typography className={classes.differenceValue} variant="body2">
-                5%
-              </Typography>
-              <Typography className={classes.caption} variant="caption">
-                Since last month
-              </Typography>
-            </React.Fragment>
+            renderMetricTrend(trend, classes)
           )}
         </div>
       </CardContent>

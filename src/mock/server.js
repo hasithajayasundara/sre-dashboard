@@ -1,0 +1,59 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+
+const app = express();
+app.use(bodyParser.json({ type: "*/*" }));
+
+app.get("/api/dashboard/metrics/errorRate", (req, res) => {
+  setTimeout(() => {
+    res.send({
+      value: "80.8%",
+      trend: {
+        value: "5%",
+        slope: -1,
+        description: "Since last month"
+      }
+    });
+  }, 2000);
+});
+
+app.get("/api/dashboard/metrics/latency", (req, res) => {
+  setTimeout(() => {
+    res.send({
+      value: "90.6%",
+      trend: {
+        value: "5%",
+        slope: 1,
+        description: "Since last month"
+      }
+    });
+  }, 2000);
+});
+
+app.get("/api/dashboard/metrics/totalUsers", (req, res) => {
+  setTimeout(() => {
+    res.send({
+      value: "855",
+      trend: {
+        value: "12%",
+        slope: -1,
+        description: "Since last month"
+      }
+    });
+  }, 2000);
+});
+
+app.get("/api/dashboard/metrics/errorBudget", (req, res) => {
+  setTimeout(() => {
+    res.send({
+      value: "55.5%",
+      trend: {
+        value: "10%",
+        slope: 1,
+        description: "Since last month"
+      }
+    });
+  }, 2000);
+});
+
+app.listen(5220);

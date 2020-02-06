@@ -6,6 +6,8 @@ import {
   delay,
   takeLatest
 } from "redux-saga/effects";
+import moment from "moment";
+
 import dashboardApi from "../services/dashboardApi";
 
 import { FETCH_ERROR_RATE, FETCH_JIRA_TICKETS } from "../actions/types";
@@ -27,14 +29,25 @@ import {
 } from "../actions/dashboard";
 
 /**
+ * Utility function to generate metrics request parameters
+ */
+function metricsRequestParams() {
+  return `?from=${moment()
+    .subtract(1, "months")
+    .valueOf()}&to=${moment().valueOf()}`;
+}
+
+/**
  * Dashboard Saga Implementation
  */
 
 function* fetchErrorRateSaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtErrorRate);
-    yield delay(5000);
-    yield put(fetchErrorRateSuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtErrorRate,
+      metricsRequestParams()
+    );
+    yield put(fetchErrorRateSuccess(data));
   } catch (err) {
     yield put(fetchErrorRateFailed());
   }
@@ -42,9 +55,11 @@ function* fetchErrorRateSaga() {
 
 function* fetchLatencySaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtLatency);
-    yield delay(2000);
-    yield put(fetchLatencySuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtLatency,
+      metricsRequestParams()
+    );
+    yield put(fetchLatencySuccess(data));
   } catch (err) {
     yield put(fetchLatencyFailed());
   }
@@ -52,9 +67,11 @@ function* fetchLatencySaga() {
 
 function* fetchTotalUsersSaga() {
   try {
-    yield delay(8000);
-    const data = yield call(dashboardApi.dashboard.fetchtTotalUsers);
-    yield put(fetchTotalUsersSuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtTotalUsers,
+      metricsRequestParams()
+    );
+    yield put(fetchTotalUsersSuccess(data));
   } catch (err) {
     yield put(fetchTotalUsersFailed());
   }
@@ -62,9 +79,11 @@ function* fetchTotalUsersSaga() {
 
 function* fetchErrorBudgetSaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtErrorBudget);
-    yield delay(4000);
-    yield put(fetchErrorBudgetSuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtErrorBudget,
+      metricsRequestParams()
+    );
+    yield put(fetchErrorBudgetSuccess(data));
   } catch (err) {
     yield put(fetchErrorBudgetFailed());
   }
@@ -72,7 +91,10 @@ function* fetchErrorBudgetSaga() {
 
 function* fetchJiraTicketsSaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtJiraTickets);
+    // const data = yield call(
+    //   dashboardApi.dashboard.fetchtJiraTickets,
+    //   metricsRequestParams()
+    // );
     yield delay(5000);
     yield put(fetchJiraTicketsSuccess(data));
   } catch (err) {

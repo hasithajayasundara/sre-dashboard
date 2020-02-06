@@ -9,7 +9,6 @@ import ErrorBudget from "./components/ErrorBudget";
 import LatestSales from "./components/LatestSales/LatestSales";
 import UsersByDevice from "./components/LatestSales/LatestSales";
 import LatestProducts from "./components/LatestProducts/LatestProducts";
-import LatestOrders from "./components/MSRJiraTickets";
 import MSRJiraTickets from "./components/MSRJiraTickets";
 
 const useStyles = makeStyles(theme => ({
@@ -20,7 +19,6 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <Grid container spacing={4}>

@@ -33,11 +33,18 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center"
   },
-  differenceIcon: {
-    color: theme.palette.error.dark
+  differenceIconSuccess: {
+    color: theme.palette.success.main
   },
-  differenceValue: {
-    color: theme.palette.error.dark,
+  differenceIconError: {
+    color: theme.palette.error.main
+  },
+  differenceValueSuccess: {
+    color: theme.palette.success.main,
+    marginRight: theme.spacing(1)
+  },
+  differenceValueError: {
+    color: theme.palette.error.main,
     marginRight: theme.spacing(1)
   }
 }));
@@ -49,7 +56,8 @@ const Latency = ({ latency, fetchLatency }) => {
   return (
     <MetricCard
       useStyles={useStyles}
-      variant="99.5%"
+      variant={latency.value || ""}
+      trend={latency.trend || {}}
       title="LATENCY"
       fetching={latency.fetching}
       error={latency.error}

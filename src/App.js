@@ -11,6 +11,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import "./assets/scss/index.scss";
 import validators from "./common/validators";
 import Routes from "./Routes";
+import setupAxios from "./utils/axios";
 
 const browserHistory = createBrowserHistory();
 
@@ -22,6 +23,8 @@ validate.validators = {
   ...validate.validators,
   ...validators
 };
+
+setupAxios();
 
 export default class App extends Component {
   render() {
