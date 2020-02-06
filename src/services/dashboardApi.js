@@ -7,6 +7,7 @@ import axios from "axios";
 const DASHBOARD_PREFIX = "/api/dashboard";
 const METRICS_PREFIX = "/metrics";
 const JIRA_PREFIX = "/jira";
+const DEPLOYMENT_PREFIX = "/deployments";
 
 export default {
   dashboard: {
@@ -29,6 +30,10 @@ export default {
     fetchtJiraTickets: payload =>
       axios
         .post(`${DASHBOARD_PREFIX}${JIRA_PREFIX}/tickets`, payload)
+        .then(res => res.data),
+    fetchDeployments: payload =>
+      axios
+        .post(`${DASHBOARD_PREFIX}${DEPLOYMENT_PREFIX}`, payload)
         .then(res => res.data)
   }
 };

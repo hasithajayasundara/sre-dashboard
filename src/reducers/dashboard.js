@@ -1,3 +1,5 @@
+import moment from "moment";
+
 import {
   FETCH_ERROR_RATE_SUCCESS,
   FETCH_LATENCY_SUCCESS,
@@ -11,9 +13,11 @@ import {
   FETCH_JIRA_TICKETS_SUCCESS,
   CHANGE_JIRA_TICKET_FILTER,
   CHANGE_JIRA_TOCKET_CREATED_DATE,
-  CHANGE_JIRA_TICKET_ROWS_PER_PAGE
+  CHANGE_JIRA_TICKET_ROWS_PER_PAGE,
+  FETCH_RECENT_DEPLOYMENTS_SUCCESS,
+  FETCH_RECENT_DEPLOYMENTS_FAILED,
+  CHANGE_RECENT_DEPLOYMENTS_DURATION
 } from "../actions/types";
-import ErrorBudget from "views/Dashboard/components/ErrorBudget";
 
 const initialState = {
   metrics: {
@@ -64,6 +68,19 @@ const initialState = {
     total: 0,
     filter: { skip: 0, limit: 10, dateOrder: "desc", status: [] },
     tickets: []
+  },
+  deployments: {
+    fetching: true,
+    error: null,
+    total: 0,
+    filter: {
+      // Get deployments of last 24 hours
+      from: moment()
+        .subtract({ hours: 1 })
+        .valueOf(),
+      to: moment().valueOf()
+    },
+    items: []
   }
 };
 
@@ -150,7 +167,7 @@ const dashboardReducer = (state = initialState, action) => {
         metrics: {
           ...state.metrics,
           errorBudget: {
-            ...ErrorBudget,
+            ...state.errorBudget,
             ...action.payload
           }
         }
@@ -214,6 +231,38 @@ const dashboardReducer = (state = initialState, action) => {
             ...state.jira.filter,
             limit: action.payload
           }
+        }
+      };
+    case FETCH_RECENT_DEPLOYMENTS_SUCCESS:
+      let { total: deploymentsTotal, items } = action.payload;
+      return {
+        ...state,
+        deployments: {
+          ...state.deployments,
+          total: deploymentsTotal || 0,
+          items: items || [],
+          error: null,
+          fetching: false
+        }
+      };
+    case FETCH_RECENT_DEPLOYMENTS_FAILED:
+      return {
+        ...state,
+        deployments: {
+          ...state.deployments,
+          error: "An error occured while fetching data",
+          fetching: false
+        }
+      };
+    case CHANGE_RECENT_DEPLOYMENTS_DURATION:
+      return {
+        ...state,
+        deployments: {
+          ...state.deployments,
+          filter: {
+            ...action.payload
+          },
+          fetching: true
         }
       };
     default:

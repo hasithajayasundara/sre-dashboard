@@ -18,12 +18,9 @@ import {
   TableRow,
   Tooltip,
   TableSortLabel,
-  LinearProgress,
-  Typography
+  LinearProgress
 } from "@material-ui/core";
 import TablePagination from "@material-ui/core/TablePagination";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import { connect } from "react-redux";
 
 import { StatusBullet } from "components";

@@ -8,7 +8,7 @@ import Latency from "./components/Latency";
 import ErrorBudget from "./components/ErrorBudget";
 import LatestSales from "./components/LatestSales/LatestSales";
 import UsersByDevice from "./components/LatestSales/LatestSales";
-import LatestProducts from "./components/LatestProducts/LatestProducts";
+import Deployments from "./components/Deployments";
 import MSRJiraTickets from "./components/MSRJiraTickets";
 
 const useStyles = makeStyles(theme => ({
@@ -41,7 +41,7 @@ const Dashboard = () => {
           <UsersByDevice />
         </Grid>
         <Grid item lg={4} md={6} xl={3} xs={12}>
-          <LatestProducts />
+          <Deployments />
         </Grid>
         <Grid item lg={8} md={12} xl={9} xs={12}>
           <MSRJiraTickets />

@@ -10,7 +10,11 @@ import moment from "moment";
 
 import dashboardApi from "../services/dashboardApi";
 
-import { FETCH_ERROR_RATE, FETCH_JIRA_TICKETS } from "../actions/types";
+import {
+  FETCH_ERROR_RATE,
+  FETCH_JIRA_TICKETS,
+  FETCH_RECENT_DEPLOYMENTS
+} from "../actions/types";
 
 import {
   fetchErrorRateSuccess,
@@ -22,7 +26,9 @@ import {
   fetchLatencySuccess,
   fetchLatencyFailed,
   fetchJiraTicketsSuccess,
-  fetchJiraTicketsFailed
+  fetchJiraTicketsFailed,
+  fetchDeploymentsSuccess,
+  fetchDeploymentsFailed
 } from "../actions/dashboard";
 
 /**
@@ -101,6 +107,15 @@ function* fetchJiraTicketsSaga({ payload }) {
   }
 }
 
+function* fetchDeploymentsSaga({ payload }) {
+  try {
+    const data = yield call(dashboardApi.dashboard.fetchDeployments, payload);
+    yield put(fetchDeploymentsSuccess(data || {}));
+  } catch (err) {
+    yield put(fetchDeploymentsFailed());
+  }
+}
+
 function* watchFetchErrorRate() {
   yield takeEvery(FETCH_ERROR_RATE, fetchErrorRateSaga);
 }
@@ -121,12 +136,17 @@ function* watchFetchJiraTickets() {
   yield takeLatest(FETCH_JIRA_TICKETS, fetchJiraTicketsSaga);
 }
 
+function* watchFetchDeployments() {
+  yield takeLatest(FETCH_RECENT_DEPLOYMENTS, fetchDeploymentsSaga);
+}
+
 export default function* dashboardSaga() {
   yield all([
     watchFetchErrorRate(),
     watchFetchLatency(),
     watchFetchTotalUsers(),
     watchFetchErrorBudget(),
-    watchFetchJiraTickets()
+    watchFetchJiraTickets(),
+    watchFetchDeployments()
   ]);
 }

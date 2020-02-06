@@ -17,7 +17,11 @@ import {
   CHANGE_JIRA_TICKET_FILTER,
   CHANGE_JIRA_TOCKET_CREATED_DATE,
   CHANGE_JIRA_TICKET_STATUS,
-  CHANGE_JIRA_TICKET_ROWS_PER_PAGE
+  CHANGE_JIRA_TICKET_ROWS_PER_PAGE,
+  FETCH_RECENT_DEPLOYMENTS,
+  FETCH_RECENT_DEPLOYMENTS_SUCCESS,
+  FETCH_RECENT_DEPLOYMENTS_FAILED,
+  CHANGE_RECENT_DEPLOYMENTS_DURATION
 } from "./types";
 
 /**
@@ -95,4 +99,20 @@ export const changeJiraTicketStatus = payload => {
 };
 export const changeJiraTicketRowsPerPage = payload => {
   return { type: CHANGE_JIRA_TICKET_ROWS_PER_PAGE, payload };
+};
+
+/**
+ * Fetch recent deployments
+ */
+export const fetchDeployments = payload => {
+  return { type: FETCH_RECENT_DEPLOYMENTS, payload };
+};
+export const fetchDeploymentsSuccess = payload => {
+  return { type: FETCH_RECENT_DEPLOYMENTS_SUCCESS, payload };
+};
+export const fetchDeploymentsFailed = payload => {
+  return { type: FETCH_RECENT_DEPLOYMENTS_FAILED, payload };
+};
+export const changeDeploymentsDuration = payload => {
+  return { type: CHANGE_RECENT_DEPLOYMENTS_DURATION, payload };
 };

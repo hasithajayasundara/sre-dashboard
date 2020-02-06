@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/styles';
-import LanguageIcon from '@material-ui/icons/Language';
+import React, { useState } from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import moment from "moment";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { makeStyles } from "@material-ui/styles";
+import LanguageIcon from "@material-ui/icons/Language";
 import Graph from "react-graph-vis";
 import {
   Card,
@@ -19,9 +19,9 @@ import {
   TableRow,
   Typography,
   TablePagination
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import { getInitials } from 'helpers';
+import { getInitials } from "helpers";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -32,14 +32,14 @@ const useStyles = makeStyles(theme => ({
     minWidth: 1050
   },
   nameContainer: {
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center"
   },
   avatar: {
     marginRight: theme.spacing(2)
   },
   actions: {
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end"
   }
 }));
 
@@ -96,18 +96,37 @@ const SLOGraph = props => {
 
   const graph = {
     nodes: [
-      { id: 1, label: "CDF\nUptime\nUsage: 99%", color: "#000000", shape: 'hexagon'},
+      {
+        id: 1,
+        label: "CDF\nUptime\nUsage: 99%",
+        color: "#000000",
+        shape: "hexagon"
+      },
       { id: 2, label: "Files\nUptime\nUsage: 99%", color: "#e09c41" },
       { id: 3, label: "Assets\nUptime\nUsage: 99%", color: "#e0df41" },
       { id: 4, label: "Events\nUptime\nUsage: 99%", color: "#7be041" },
       { id: 5, label: "Timeseries\nUptime\nUsage: 99%", color: "#41e0c9" },
-      { id: 6, label: "CDF\nError\nUsage: 99%", color: "#000000", shape: 'hexagon'},
+      {
+        id: 6,
+        label: "CDF\nError\nUsage: 99%",
+        color: "#000000",
+        shape: "hexagon"
+      },
       { id: 7, label: "Files\nError\nUsage: 99%", color: "#e09c41" },
       { id: 8, label: "Assets\nError\nUsage: 99%", color: "#e0df41" },
       { id: 9, label: "Events\nError\nUsage: 99%", color: "#7be041" },
       { id: 10, label: "Timeseries\nError\nUsage: 99%", color: "#41e0c9" }
     ],
-    edges: [{ from: 1, to: 2 }, { from: 1, to: 3 }, { from: 1, to: 4 }, { from: 1, to: 5 }, { from: 6, to: 7 }, { from: 6, to: 8 }, { from: 6, to: 9 }, { from: 6, to: 10 }]
+    edges: [
+      { from: 1, to: 2 },
+      { from: 1, to: 3 },
+      { from: 1, to: 4 },
+      { from: 1, to: 5 },
+      { from: 6, to: 7 },
+      { from: 6, to: 8 },
+      { from: 6, to: 9 },
+      { from: 6, to: 10 }
+    ]
   };
 
   const options = {
@@ -118,7 +137,7 @@ const SLOGraph = props => {
       color: "#000000"
     },
     nodes: {
-      shape: 'circle'
+      shape: "circle"
     },
     height: 600,
     interaction: {
@@ -137,13 +156,9 @@ const SLOGraph = props => {
   };
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent className={classes.content}>
-        <Graph graph={graph} options={options} events={events}/>
-
+        <Graph graph={graph} options={options} events={events} />
       </CardContent>
     </Card>
   );
