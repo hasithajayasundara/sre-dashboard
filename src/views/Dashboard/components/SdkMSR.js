@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import clsx from "clsx";
 import PropTypes from "prop-types";
@@ -9,12 +9,14 @@ import {
   CardContent,
   IconButton,
   Divider,
-  Typography
+  Typography,
+  CircularProgress
 } from "@material-ui/core";
 import LaptopMacIcon from "@material-ui/icons/LaptopMac";
-import PhoneIphoneIcon from "@material-ui/icons/PhoneIphone";
 import RefreshIcon from "@material-ui/icons/Refresh";
-import TabletMacIcon from "@material-ui/icons/TabletMac";
+import { connect } from "react-redux";
+
+import { fetchSdkMSR } from "../../../actions/dashboard";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,19 +37,30 @@ const useStyles = makeStyles(theme => ({
   },
   deviceIcon: {
     color: theme.palette.icon
+  },
+  circularProgressContainer: {
+    width: "100%",
+    height: "300px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
   }
 }));
 
-const UsersByDevice = props => {
-  const { className, ...rest } = props;
-
+const SdkMSR = ({
+  fetching,
+  dataSet = [],
+  error,
+  pieChartData,
+  fetchSdkMSR
+}) => {
   const classes = useStyles();
   const theme = useTheme();
 
   const data = {
     datasets: [
       {
-        data: [50, 10, 40],
+        data: [],
         backgroundColor: [
           theme.palette.primary.main,
           theme.palette.error.main,
@@ -58,7 +71,8 @@ const UsersByDevice = props => {
         hoverBorderColor: theme.palette.white
       }
     ],
-    labels: ["Scala", "Python", "Javascript"]
+    labels: [],
+    ...pieChartData
   };
 
   const options = {
@@ -83,32 +97,15 @@ const UsersByDevice = props => {
     }
   };
 
-  const devices = [
-    {
-      title: "Scala",
-      value: "50",
-      icon: <LaptopMacIcon />,
-      color: theme.palette.primary.main
-    },
-    {
-      title: "Python",
-      value: "10",
-      icon: <LaptopMacIcon />,
-      color: theme.palette.error.main
-    },
-    {
-      title: "Javascript",
-      value: "40",
-      icon: <LaptopMacIcon />,
-      color: theme.palette.warning.main
-    }
-  ];
+  useEffect(() => {
+    fetchSdkMSR();
+  }, [fetchSdkMSR]);
 
   return (
-    <Card {...rest} className={clsx(classes.root, className)}>
+    <Card className={clsx(classes.root)}>
       <CardHeader
         action={
-          <IconButton size="small">
+          <IconButton size="small" onClick={() => fetchSdkMSR()}>
             <RefreshIcon />
           </IconButton>
         }
@@ -116,27 +113,49 @@ const UsersByDevice = props => {
       />
       <Divider />
       <CardContent>
-        <div className={classes.chartContainer}>
-          <Doughnut data={data} options={options} />
-        </div>
-        <div className={classes.stats}>
-          {devices.map(device => (
-            <div className={classes.device} key={device.title}>
-              <span className={classes.deviceIcon}>{device.icon}</span>
-              <Typography variant="body1">{device.title}</Typography>
-              <Typography style={{ color: device.color }} variant="h2">
-                {device.value}%
-              </Typography>
+        {fetching ? (
+          <div className={classes.circularProgressContainer}>
+            <CircularProgress></CircularProgress>
+          </div>
+        ) : (
+          <React.Fragment>
+            <div className={classes.chartContainer}>
+              <Doughnut data={data} options={options} />
             </div>
-          ))}
-        </div>
+            <div className={classes.stats}>
+              {dataSet.map(device => (
+                <div className={classes.device} key={device.title}>
+                  <span className={classes.deviceIcon}>
+                    <LaptopMacIcon />
+                  </span>
+                  <Typography variant="body1">{device.title}</Typography>
+                  <Typography style={{ color: device.color }} variant="h3">
+                    {device.value}%
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          </React.Fragment>
+        )}
       </CardContent>
     </Card>
   );
 };
 
-UsersByDevice.propTypes = {
+SdkMSR.propTypes = {
   className: PropTypes.string
 };
 
-export default UsersByDevice;
+function mapStateToProps({ dashboard }) {
+  return {
+    fetching: dashboard.sdkMSR.fetching,
+    dataSet: dashboard.sdkMSR.dataSet,
+    error: dashboard.sdkMSR.error,
+    pieChartData: dashboard.sdkMSR.pieChartData
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  { fetchSdkMSR }
+)(SdkMSR);

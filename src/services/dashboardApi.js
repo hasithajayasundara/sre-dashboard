@@ -10,6 +10,7 @@ const METRICS_PREFIX = "/metrics";
 const JIRA_PREFIX = "/jira";
 const DEPLOYMENT_PREFIX = "/deployments";
 const CLIENT_MSR_PREFIX = "/clientMSR";
+const SDK_MSR_PREFIX = "/sdkMSR";
 
 export default {
   dashboard: {
@@ -40,6 +41,8 @@ export default {
     fetchClientMSR: payload =>
       axios
         .post(`${DASHBOARD_PREFIX}${CLIENT_MSR_PREFIX}`, payload)
-        .then(res => res.data)
+        .then(res => res.data),
+    fetchSdkMSR: payload =>
+      axios.get(`${DASHBOARD_PREFIX}${SDK_MSR_PREFIX}`).then(res => res.data)
   }
 };

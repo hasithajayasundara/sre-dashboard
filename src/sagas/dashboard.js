@@ -14,7 +14,8 @@ import {
   FETCH_ERROR_RATE,
   FETCH_JIRA_TICKETS,
   FETCH_RECENT_DEPLOYMENTS,
-  FETCH_CLIENT_MSR
+  FETCH_CLIENT_MSR,
+  FETCH_SDK_MSR
 } from "../actions/types";
 
 import {
@@ -31,7 +32,9 @@ import {
   fetchDeploymentsSuccess,
   fetchDeploymentsFailed,
   fetchClientMSRSuccess,
-  fetchClientMSRFailed
+  fetchClientMSRFailed,
+  fetchSdkMSRSuccess,
+  fetchSdkMSRFailed
 } from "../actions/dashboard";
 
 /**
@@ -128,6 +131,15 @@ function* fetchClientMSRSaga({ payload }) {
   }
 }
 
+function* fetchSdkMSRSaga({ payload }) {
+  try {
+    const data = yield call(dashboardApi.dashboard.fetchSdkMSR, payload);
+    yield put(fetchSdkMSRSuccess(data || {}));
+  } catch (err) {
+    yield put(fetchSdkMSRSuccess());
+  }
+}
+
 function* watchFetchErrorRate() {
   yield takeEvery(FETCH_ERROR_RATE, fetchErrorRateSaga);
 }
@@ -156,6 +168,10 @@ function* watchFetchClientMSR() {
   yield takeLatest(FETCH_CLIENT_MSR, fetchClientMSRSaga);
 }
 
+function* watchFetchSdkMSR() {
+  yield takeLatest(FETCH_SDK_MSR, fetchSdkMSRSaga);
+}
+
 export default function* dashboardSaga() {
   yield all([
     watchFetchErrorRate(),
@@ -164,6 +180,7 @@ export default function* dashboardSaga() {
     watchFetchErrorBudget(),
     watchFetchJiraTickets(),
     watchFetchDeployments(),
-    watchFetchClientMSR()
+    watchFetchClientMSR(),
+    watchFetchSdkMSR()
   ]);
 }

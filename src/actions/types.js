@@ -40,6 +40,9 @@ export const FETCH_CLIENT_MSR_SUCCESS = "FETCH_CLIENT_MSR_SUCCESS";
 export const FETCH_CLIENT_MSR_FAILED = "FETCH_CLIENT_MSR_FAILED";
 export const CHANGE_CLIENT_MSR_DAYS = "CHANGE_CLIENT_MSR_DAYS";
 
+export const FETCH_SDK_MSR = "FETCH_SDK_MSR";
+export const FETCH_SDK_MSR_SUCCESS = "FETCH_SDK_MSR_SUCCESS";
+export const FETCH_SDK_MSR_FAILED = "FETCH_SDK_MSR_FAILED";
 /**
  * ================== Dashboard tasks ends ============================
  */

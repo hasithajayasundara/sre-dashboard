@@ -21,7 +21,10 @@ import {
   FETCH_CLIENT_MSR_SUCCESS,
   FETCH_CLIENT_MSR_FAILED,
   CHANGE_CLIENT_MSR_DAYS,
-  FETCH_CLIENT_MSR
+  FETCH_CLIENT_MSR,
+  FETCH_SDK_MSR_SUCCESS,
+  FETCH_SDK_MSR_FAILED,
+  FETCH_SDK_MSR
 } from "../actions/types";
 
 const initialState = {
@@ -101,6 +104,20 @@ const initialState = {
     dataSet: {
       labels: [],
       datasets: []
+    }
+  },
+  sdkMSR: {
+    fetching: true,
+    error: null,
+    dataSet: [],
+    pieChartData: {
+      datasets: [
+        {
+          data: [],
+          backgroundColor: []
+        }
+      ],
+      labels: []
     }
   }
 };
@@ -336,6 +353,34 @@ const dashboardReducer = (state = initialState, action) => {
           }
         }
       };
+    case FETCH_SDK_MSR:
+      return {
+        ...state,
+        sdkMSR: {
+          ...state.sdkMSR,
+          fetching: true
+        }
+      };
+    case FETCH_SDK_MSR_SUCCESS:
+      let sdkMSRDataset = action.payload;
+      return {
+        ...state,
+        sdkMSR: {
+          ...state.sdkMSR,
+          fetching: false,
+          ...sdkDataSetBuilder(sdkMSRDataset),
+          error: null
+        }
+      };
+    case FETCH_SDK_MSR_FAILED:
+      return {
+        ...state,
+        sdkMSR: {
+          ...state.sdkMSR,
+          fetching: false,
+          error: "An error occured"
+        }
+      };
     default:
       return state;
   }
@@ -354,6 +399,33 @@ const chartDataSetBuilder = (datasets = [], days) => {
     backgroundColor: backgroundColors[idx]
   }));
   return { datasets, labels };
+};
+
+const sdkDataSetBuilder = sdkMSRDataset => {
+  let datasetLen = sdkMSRDataset.length;
+  let backgroundColor = palette("tol", datasetLen).map(hex => `#${hex}`);
+  let data = [...new Array(datasetLen)];
+  let labels = [...new Array(datasetLen)];
+  for (let idx = 0; idx < datasetLen; idx++) {
+    data[idx] = sdkMSRDataset[idx].value;
+    labels[idx] = sdkMSRDataset[idx].title;
+    sdkMSRDataset[idx] = {
+      ...sdkMSRDataset[idx],
+      color: backgroundColor[idx]
+    };
+  }
+  return {
+    dataSet: sdkMSRDataset,
+    pieChartData: {
+      datasets: [
+        {
+          data,
+          backgroundColor
+        }
+      ],
+      labels
+    }
+  };
 };
 
 export default dashboardReducer;

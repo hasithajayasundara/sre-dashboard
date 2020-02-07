@@ -25,7 +25,10 @@ import {
   FETCH_CLIENT_MSR,
   FETCH_CLIENT_MSR_SUCCESS,
   FETCH_CLIENT_MSR_FAILED,
-  CHANGE_CLIENT_MSR_DAYS
+  CHANGE_CLIENT_MSR_DAYS,
+  FETCH_SDK_MSR,
+  FETCH_SDK_MSR_SUCCESS,
+  FETCH_SDK_MSR_FAILED
 } from "./types";
 
 /**
@@ -135,4 +138,17 @@ export const fetchClientMSRFailed = payload => {
 };
 export const changeClientMSRDays = payload => {
   return { type: CHANGE_CLIENT_MSR_DAYS, payload };
+};
+
+/**
+ * Fetch SDK MSR
+ */
+export const fetchSdkMSR = payload => {
+  return { type: FETCH_SDK_MSR, payload };
+};
+export const fetchSdkMSRSuccess = payload => {
+  return { type: FETCH_SDK_MSR_SUCCESS, payload };
+};
+export const fetchSdkMSRFailed = payload => {
+  return { type: FETCH_SDK_MSR_FAILED, payload };
 };
