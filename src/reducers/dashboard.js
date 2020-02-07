@@ -1,4 +1,5 @@
 import moment from "moment";
+import palette from "google-palette";
 
 import {
   FETCH_ERROR_RATE_SUCCESS,
@@ -16,7 +17,11 @@ import {
   CHANGE_JIRA_TICKET_ROWS_PER_PAGE,
   FETCH_RECENT_DEPLOYMENTS_SUCCESS,
   FETCH_RECENT_DEPLOYMENTS_FAILED,
-  CHANGE_RECENT_DEPLOYMENTS_DURATION
+  CHANGE_RECENT_DEPLOYMENTS_DURATION,
+  FETCH_CLIENT_MSR_SUCCESS,
+  FETCH_CLIENT_MSR_FAILED,
+  CHANGE_CLIENT_MSR_DAYS,
+  FETCH_CLIENT_MSR
 } from "../actions/types";
 
 const initialState = {
@@ -81,6 +86,22 @@ const initialState = {
       to: moment().valueOf()
     },
     items: []
+  },
+  clientMSR: {
+    fetching: true,
+    error: null,
+    filter: {
+      // Get deployments of last 7 days
+      from: moment()
+        .subtract({ days: 7 })
+        .valueOf(),
+      to: moment().valueOf(),
+      days: 7
+    },
+    dataSet: {
+      labels: [],
+      datasets: []
+    }
   }
 };
 
@@ -265,9 +286,74 @@ const dashboardReducer = (state = initialState, action) => {
           fetching: true
         }
       };
+    case FETCH_CLIENT_MSR:
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          fetching: true
+        }
+      };
+    case FETCH_CLIENT_MSR_SUCCESS:
+      let { datasets } = action.payload;
+      let datasetObj = chartDataSetBuilder(
+        datasets,
+        state.clientMSR.filter.days
+      );
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          dataSet: {
+            ...datasetObj
+          },
+          error: null,
+          fetching: false
+        }
+      };
+    case FETCH_CLIENT_MSR_FAILED:
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          error: "An error occured",
+          fetching: false
+        }
+      };
+    case CHANGE_CLIENT_MSR_DAYS:
+      let msrDuration = action.payload;
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          filter: {
+            // Get deployments of last 7 days
+            from: moment()
+              .subtract({ days: msrDuration })
+              .valueOf(),
+            to: moment().valueOf(),
+            days: msrDuration
+          }
+        }
+      };
     default:
       return state;
   }
+};
+
+const chartDataSetBuilder = (datasets = [], days) => {
+  let labels = [...new Array(days)].map((i, idx) =>
+    moment()
+      .startOf("day")
+      .subtract(days - idx, "days")
+      .format("DD MMM")
+  );
+  let backgroundColors = palette("tol", datasets.length).map(hex => `#${hex}`);
+  datasets = datasets.map((itm, idx) => ({
+    ...itm,
+    backgroundColor: backgroundColors[idx]
+  }));
+  return { datasets, labels };
 };
 
 export default dashboardReducer;

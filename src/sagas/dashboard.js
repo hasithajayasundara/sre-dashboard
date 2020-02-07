@@ -13,7 +13,8 @@ import dashboardApi from "../services/dashboardApi";
 import {
   FETCH_ERROR_RATE,
   FETCH_JIRA_TICKETS,
-  FETCH_RECENT_DEPLOYMENTS
+  FETCH_RECENT_DEPLOYMENTS,
+  FETCH_CLIENT_MSR
 } from "../actions/types";
 
 import {
@@ -28,7 +29,9 @@ import {
   fetchJiraTicketsSuccess,
   fetchJiraTicketsFailed,
   fetchDeploymentsSuccess,
-  fetchDeploymentsFailed
+  fetchDeploymentsFailed,
+  fetchClientMSRSuccess,
+  fetchClientMSRFailed
 } from "../actions/dashboard";
 
 /**
@@ -116,6 +119,15 @@ function* fetchDeploymentsSaga({ payload }) {
   }
 }
 
+function* fetchClientMSRSaga({ payload }) {
+  try {
+    const data = yield call(dashboardApi.dashboard.fetchClientMSR, payload);
+    yield put(fetchClientMSRSuccess(data || {}));
+  } catch (err) {
+    yield put(fetchClientMSRFailed());
+  }
+}
+
 function* watchFetchErrorRate() {
   yield takeEvery(FETCH_ERROR_RATE, fetchErrorRateSaga);
 }
@@ -140,6 +152,10 @@ function* watchFetchDeployments() {
   yield takeLatest(FETCH_RECENT_DEPLOYMENTS, fetchDeploymentsSaga);
 }
 
+function* watchFetchClientMSR() {
+  yield takeLatest(FETCH_CLIENT_MSR, fetchClientMSRSaga);
+}
+
 export default function* dashboardSaga() {
   yield all([
     watchFetchErrorRate(),
@@ -147,6 +163,7 @@ export default function* dashboardSaga() {
     watchFetchTotalUsers(),
     watchFetchErrorBudget(),
     watchFetchJiraTickets(),
-    watchFetchDeployments()
+    watchFetchDeployments(),
+    watchFetchClientMSR()
   ]);
 }

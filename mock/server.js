@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const jiraMock = require("./jiraMock");
 const deploymentsMock = require("./deploymentsMock");
+const clientMSRMock = require("./clientMSRMock");
 
 const app = express();
 app.use(bodyParser.json({ type: "*/*" }));
@@ -67,6 +68,12 @@ app.post("/api/dashboard/jira/tickets", (req, res) => {
 app.post("/api/dashboard/deployments", (req, res) => {
   setTimeout(() => {
     res.send(deploymentsMock);
+  }, 2000);
+});
+
+app.post("/api/dashboard/clientMSR", (req, res) => {
+  setTimeout(() => {
+    res.send(clientMSRMock);
   }, 2000);
 });
 

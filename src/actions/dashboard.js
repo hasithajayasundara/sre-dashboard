@@ -21,7 +21,11 @@ import {
   FETCH_RECENT_DEPLOYMENTS,
   FETCH_RECENT_DEPLOYMENTS_SUCCESS,
   FETCH_RECENT_DEPLOYMENTS_FAILED,
-  CHANGE_RECENT_DEPLOYMENTS_DURATION
+  CHANGE_RECENT_DEPLOYMENTS_DURATION,
+  FETCH_CLIENT_MSR,
+  FETCH_CLIENT_MSR_SUCCESS,
+  FETCH_CLIENT_MSR_FAILED,
+  CHANGE_CLIENT_MSR_DAYS
 } from "./types";
 
 /**
@@ -115,4 +119,20 @@ export const fetchDeploymentsFailed = payload => {
 };
 export const changeDeploymentsDuration = payload => {
   return { type: CHANGE_RECENT_DEPLOYMENTS_DURATION, payload };
+};
+
+/**
+ * Fetch client MSR
+ */
+export const fetchClientMSR = payload => {
+  return { type: FETCH_CLIENT_MSR, payload };
+};
+export const fetchClientMSRSuccess = payload => {
+  return { type: FETCH_CLIENT_MSR_SUCCESS, payload };
+};
+export const fetchClientMSRFailed = payload => {
+  return { type: FETCH_CLIENT_MSR_FAILED, payload };
+};
+export const changeClientMSRDays = payload => {
+  return { type: CHANGE_CLIENT_MSR_DAYS, payload };
 };

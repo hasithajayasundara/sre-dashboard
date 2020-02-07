@@ -1,4 +1,5 @@
 import axios from "axios";
+import { fetchClientMSR } from "actions/dashboard";
 
 /**
  * Dashboard component API
@@ -8,6 +9,7 @@ const DASHBOARD_PREFIX = "/api/dashboard";
 const METRICS_PREFIX = "/metrics";
 const JIRA_PREFIX = "/jira";
 const DEPLOYMENT_PREFIX = "/deployments";
+const CLIENT_MSR_PREFIX = "/clientMSR";
 
 export default {
   dashboard: {
@@ -34,6 +36,10 @@ export default {
     fetchDeployments: payload =>
       axios
         .post(`${DASHBOARD_PREFIX}${DEPLOYMENT_PREFIX}`, payload)
+        .then(res => res.data),
+    fetchClientMSR: payload =>
+      axios
+        .post(`${DASHBOARD_PREFIX}${CLIENT_MSR_PREFIX}`, payload)
         .then(res => res.data)
   }
 };

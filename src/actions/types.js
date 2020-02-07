@@ -35,6 +35,11 @@ export const FETCH_RECENT_DEPLOYMENTS_FAILED =
 export const CHANGE_RECENT_DEPLOYMENTS_DURATION =
   "CHANGE_RECENT_DEPLOYMENTS_DURATION";
 
+export const FETCH_CLIENT_MSR = "FETCH_CLIENT_MSR";
+export const FETCH_CLIENT_MSR_SUCCESS = "FETCH_CLIENT_MSR_SUCCESS";
+export const FETCH_CLIENT_MSR_FAILED = "FETCH_CLIENT_MSR_FAILED";
+export const CHANGE_CLIENT_MSR_DAYS = "CHANGE_CLIENT_MSR_DAYS";
+
 /**
  * ================== Dashboard tasks ends ============================
  */
