@@ -136,7 +136,7 @@ function* fetchSdkMSRSaga({ payload }) {
     const data = yield call(dashboardApi.dashboard.fetchSdkMSR, payload);
     yield put(fetchSdkMSRSuccess(data || {}));
   } catch (err) {
-    yield put(fetchSdkMSRSuccess());
+    yield put(fetchSdkMSRFailed());
   }
 }
 
