@@ -23,7 +23,7 @@ import {
 function* fetchGoogleProfile({ payload }) {
   try {
     const data = yield call(signInAPi.signIn.verifyIdToken, payload);
-    yield put(fetchGoogleProfileSuccess(data || {}));
+    yield put(fetchGoogleProfileSuccess({ ...data, id_token: payload } || {}));
   } catch (err) {
     yield put(fetchGoogleProfileFailed());
   }

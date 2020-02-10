@@ -18,12 +18,13 @@ const initialState = {
 const signInReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_GOOGLE_PROFILE_SUCCESS:
-      let { name, picture } = action.payload;
+      let { name, picture, id_token } = action.payload;
       return {
         signedIn: true,
         user: {
           name,
-          picture
+          picture,
+          id_token
         }
       };
     case FETCH_GOOGLE_PROFILE_FAILED:

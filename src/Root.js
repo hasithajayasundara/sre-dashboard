@@ -9,7 +9,7 @@ import registerSagasWithMiddleware from "./sagas";
 
 const loggerMiddleware = createLogger();
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(
+export const store = createStore(
   reducers,
   {},
   applyMiddleware(sagaMiddleware, loggerMiddleware)
