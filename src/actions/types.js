@@ -46,3 +46,14 @@ export const FETCH_SDK_MSR_FAILED = "FETCH_SDK_MSR_FAILED";
 /**
  * ================== Dashboard tasks ends ============================
  */
+
+/**
+ * ================== SignIn Tasks ============================
+ */
+export const SET_USER_INFORMATION = "SET_USER_INFORMATION";
+export const FETCH_GOOGLE_PROFILE = "FETCH_GOOGLE_PROFILE";
+export const FETCH_GOOGLE_PROFILE_SUCCESS = "FETCH_GOOGLE_PROFILE_SUCCESS";
+export const FETCH_GOOGLE_PROFILE_FAILED = "FETCH_GOOGLE_PROFILE_FAILED";
+/**
+ * ================== SignIn Tasks Ends ============================
+ */

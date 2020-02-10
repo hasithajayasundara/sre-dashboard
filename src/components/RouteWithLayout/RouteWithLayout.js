@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Redirect, withRouter } from "react-router-dom";
 
 const RouteWithLayout = props => {
-  const { layout: Layout, component: Component, ...rest } = props;
+  const {
+    layout: Layout,
+    component: Component,
+    signedIn,
+    history,
+    path,
+    ...rest
+  } = props;
 
   return (
     <Route
@@ -23,4 +32,8 @@ RouteWithLayout.propTypes = {
   path: PropTypes.string
 };
 
-export default RouteWithLayout;
+function mapStateToProps({ signIn }) {
+  return { signedIn: signIn.signedIn };
+}
+
+export default connect(mapStateToProps, {})(withRouter(RouteWithLayout));
