@@ -1,9 +1,11 @@
 import axios from "axios";
+import { store } from "../Root";
 
 export default function setupAxios() {
   axios.interceptors.request.use(
-    request => {
-      return request;
+    config => {
+      config.headers.Authorization = store.getState().signIn.user.id_token;
+      return config;
     },
     error => {
       return Promise.reject(error);
