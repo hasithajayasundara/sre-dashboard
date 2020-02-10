@@ -41,11 +41,18 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center"
   },
-  differenceIcon: {
-    color: theme.palette.error.white
+  differenceIconSuccess: {
+    color: theme.palette.success.main
   },
-  differenceValue: {
-    color: "inherit",
+  differenceIconError: {
+    color: theme.palette.error.main
+  },
+  differenceValueSuccess: {
+    color: theme.palette.success.main,
+    marginRight: theme.spacing(1)
+  },
+  differenceValueError: {
+    color: theme.palette.error.main,
     marginRight: theme.spacing(1)
   }
 }));
@@ -54,11 +61,11 @@ const ErrorBudget = ({ errorBudget, fetchErrorBudget }) => {
   useEffect(() => {
     fetchErrorBudget();
   }, [fetchErrorBudget]);
-
   return (
     <MetricCard
       useStyles={useStyles}
-      variant="99.5%"
+      variant={errorBudget.value || ""}
+      trend={errorBudget.trend || {}}
       title="ERROR BUDGET"
       fetching={errorBudget.fetching}
       error={errorBudget.error}

@@ -6,12 +6,17 @@ import {
   delay,
   takeLatest
 } from "redux-saga/effects";
+import moment from "moment";
+
 import dashboardApi from "../services/dashboardApi";
 
-import { FETCH_ERROR_RATE, FETCH_JIRA_TICKETS } from "../actions/types";
-
-// Remove this when backend API completed
-import data from "../mock/data";
+import {
+  FETCH_ERROR_RATE,
+  FETCH_JIRA_TICKETS,
+  FETCH_RECENT_DEPLOYMENTS,
+  FETCH_CLIENT_MSR,
+  FETCH_SDK_MSR
+} from "../actions/types";
 
 import {
   fetchErrorRateSuccess,
@@ -23,8 +28,23 @@ import {
   fetchLatencySuccess,
   fetchLatencyFailed,
   fetchJiraTicketsSuccess,
-  fetchJiraTicketsFailed
+  fetchJiraTicketsFailed,
+  fetchDeploymentsSuccess,
+  fetchDeploymentsFailed,
+  fetchClientMSRSuccess,
+  fetchClientMSRFailed,
+  fetchSdkMSRSuccess,
+  fetchSdkMSRFailed
 } from "../actions/dashboard";
+
+/**
+ * Utility function to generate metrics request parameters
+ */
+function metricsRequestParams() {
+  return `?from=${moment()
+    .subtract(1, "months")
+    .valueOf()}&to=${moment().valueOf()}`;
+}
 
 /**
  * Dashboard Saga Implementation
@@ -32,9 +52,11 @@ import {
 
 function* fetchErrorRateSaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtErrorRate);
-    yield delay(5000);
-    yield put(fetchErrorRateSuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtErrorRate,
+      metricsRequestParams()
+    );
+    yield put(fetchErrorRateSuccess(data));
   } catch (err) {
     yield put(fetchErrorRateFailed());
   }
@@ -42,9 +64,11 @@ function* fetchErrorRateSaga() {
 
 function* fetchLatencySaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtLatency);
-    yield delay(2000);
-    yield put(fetchLatencySuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtLatency,
+      metricsRequestParams()
+    );
+    yield put(fetchLatencySuccess(data));
   } catch (err) {
     yield put(fetchLatencyFailed());
   }
@@ -52,9 +76,11 @@ function* fetchLatencySaga() {
 
 function* fetchTotalUsersSaga() {
   try {
-    yield delay(8000);
-    const data = yield call(dashboardApi.dashboard.fetchtTotalUsers);
-    yield put(fetchTotalUsersSuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtTotalUsers,
+      metricsRequestParams()
+    );
+    yield put(fetchTotalUsersSuccess(data));
   } catch (err) {
     yield put(fetchTotalUsersFailed());
   }
@@ -62,21 +88,55 @@ function* fetchTotalUsersSaga() {
 
 function* fetchErrorBudgetSaga() {
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtErrorBudget);
-    yield delay(4000);
-    yield put(fetchErrorBudgetSuccess());
+    const data = yield call(
+      dashboardApi.dashboard.fetchtErrorBudget,
+      metricsRequestParams()
+    );
+    yield put(fetchErrorBudgetSuccess(data));
   } catch (err) {
     yield put(fetchErrorBudgetFailed());
   }
 }
 
-function* fetchJiraTicketsSaga() {
+function* fetchJiraTicketsSaga({ payload }) {
+  let payloadCopy = { ...payload };
+  let { skip, limit } = { ...payloadCopy };
+  payloadCopy.skip = skip * limit;
   try {
-    // const data = yield call(dashboardApi.dashboard.fetchtJiraTickets);
-    yield delay(5000);
-    yield put(fetchJiraTicketsSuccess(data));
+    const data = yield call(
+      dashboardApi.dashboard.fetchtJiraTickets,
+      payloadCopy
+    );
+    yield put(fetchJiraTicketsSuccess(data || {}));
   } catch (err) {
     yield put(fetchJiraTicketsFailed());
+  }
+}
+
+function* fetchDeploymentsSaga({ payload }) {
+  try {
+    const data = yield call(dashboardApi.dashboard.fetchDeployments, payload);
+    yield put(fetchDeploymentsSuccess(data || {}));
+  } catch (err) {
+    yield put(fetchDeploymentsFailed());
+  }
+}
+
+function* fetchClientMSRSaga({ payload }) {
+  try {
+    const data = yield call(dashboardApi.dashboard.fetchClientMSR, payload);
+    yield put(fetchClientMSRSuccess(data || {}));
+  } catch (err) {
+    yield put(fetchClientMSRFailed());
+  }
+}
+
+function* fetchSdkMSRSaga({ payload }) {
+  try {
+    const data = yield call(dashboardApi.dashboard.fetchSdkMSR, payload);
+    yield put(fetchSdkMSRSuccess(data || {}));
+  } catch (err) {
+    yield put(fetchSdkMSRSuccess());
   }
 }
 
@@ -100,12 +160,27 @@ function* watchFetchJiraTickets() {
   yield takeLatest(FETCH_JIRA_TICKETS, fetchJiraTicketsSaga);
 }
 
+function* watchFetchDeployments() {
+  yield takeLatest(FETCH_RECENT_DEPLOYMENTS, fetchDeploymentsSaga);
+}
+
+function* watchFetchClientMSR() {
+  yield takeLatest(FETCH_CLIENT_MSR, fetchClientMSRSaga);
+}
+
+function* watchFetchSdkMSR() {
+  yield takeLatest(FETCH_SDK_MSR, fetchSdkMSRSaga);
+}
+
 export default function* dashboardSaga() {
   yield all([
     watchFetchErrorRate(),
     watchFetchLatency(),
     watchFetchTotalUsers(),
     watchFetchErrorBudget(),
-    watchFetchJiraTickets()
+    watchFetchJiraTickets(),
+    watchFetchDeployments(),
+    watchFetchClientMSR(),
+    watchFetchSdkMSR()
   ]);
 }

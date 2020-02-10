@@ -1,3 +1,6 @@
+import moment from "moment";
+import palette from "google-palette";
+
 import {
   FETCH_ERROR_RATE_SUCCESS,
   FETCH_LATENCY_SUCCESS,
@@ -9,7 +12,19 @@ import {
   FETCH_ERROR_BUDGET_FAILED,
   FETCH_JIRA_TICKETS_FAILED,
   FETCH_JIRA_TICKETS_SUCCESS,
-  CHANGE_JIRA_TICKET_FILTER
+  CHANGE_JIRA_TICKET_FILTER,
+  CHANGE_JIRA_TOCKET_CREATED_DATE,
+  CHANGE_JIRA_TICKET_ROWS_PER_PAGE,
+  FETCH_RECENT_DEPLOYMENTS_SUCCESS,
+  FETCH_RECENT_DEPLOYMENTS_FAILED,
+  CHANGE_RECENT_DEPLOYMENTS_DURATION,
+  FETCH_CLIENT_MSR_SUCCESS,
+  FETCH_CLIENT_MSR_FAILED,
+  CHANGE_CLIENT_MSR_DAYS,
+  FETCH_CLIENT_MSR,
+  FETCH_SDK_MSR_SUCCESS,
+  FETCH_SDK_MSR_FAILED,
+  FETCH_SDK_MSR
 } from "../actions/types";
 
 const initialState = {
@@ -20,7 +35,8 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     },
     latency: {
@@ -29,7 +45,8 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     },
     totalUsers: {
@@ -38,7 +55,8 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     },
     errorBudget: {
@@ -47,16 +65,60 @@ const initialState = {
       value: 0,
       trend: {
         value: 0,
-        slope: -1
+        slope: -1,
+        description: ""
       }
     }
   },
   jira: {
     fetching: true,
     error: null,
-    total: 100,
-    filter: { skip: 0, limit: 10, createdDate: "desc", status: [] },
+    total: 0,
+    filter: { skip: 0, limit: 10, dateOrder: "desc", status: [] },
     tickets: []
+  },
+  deployments: {
+    fetching: true,
+    error: null,
+    total: 0,
+    filter: {
+      // Get deployments of last 24 hours
+      from: moment()
+        .subtract({ hours: 1 })
+        .valueOf(),
+      to: moment().valueOf()
+    },
+    items: []
+  },
+  clientMSR: {
+    fetching: true,
+    error: null,
+    filter: {
+      // Get deployments of last 7 days
+      from: moment()
+        .subtract({ days: 7 })
+        .valueOf(),
+      to: moment().valueOf(),
+      days: 7
+    },
+    dataSet: {
+      labels: [],
+      datasets: []
+    }
+  },
+  sdkMSR: {
+    fetching: true,
+    error: null,
+    dataSet: [],
+    pieChartData: {
+      datasets: [
+        {
+          data: [],
+          backgroundColor: []
+        }
+      ],
+      labels: []
+    }
   }
 };
 
@@ -73,7 +135,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          errorRate
+          errorRate: {
+            ...errorRate,
+            ...action.payload
+          }
         }
       };
     case FETCH_ERROR_RATE_FAILED:
@@ -93,7 +158,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          latency
+          latency: {
+            ...latency,
+            ...action.payload
+          }
         }
       };
     case FETCH_LATENCY_FAILED:
@@ -113,7 +181,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          totalUsers
+          totalUsers: {
+            ...totalUsers,
+            ...action.payload
+          }
         }
       };
     case FETCH_TOTAL_USERS_FAILED:
@@ -133,7 +204,10 @@ const dashboardReducer = (state = initialState, action) => {
         ...state,
         metrics: {
           ...state.metrics,
-          errorBudget
+          errorBudget: {
+            ...state.errorBudget,
+            ...action.payload
+          }
         }
       };
     case FETCH_ERROR_BUDGET_FAILED:
@@ -147,11 +221,13 @@ const dashboardReducer = (state = initialState, action) => {
         }
       };
     case FETCH_JIRA_TICKETS_SUCCESS:
+      let { total, tickets } = action.payload;
       return {
         ...state,
         jira: {
           ...state.jira,
-          tickets: action.payload,
+          total: total || 0,
+          tickets: tickets || [],
           fetching: false,
           error: null
         }
@@ -171,12 +247,185 @@ const dashboardReducer = (state = initialState, action) => {
         jira: {
           ...state.jira,
           fetching: true,
-          filter: { ...state.jira.filter, ...action.payload }
+          filter: { ...state.jira.filter, skip: action.payload }
+        }
+      };
+    case CHANGE_JIRA_TOCKET_CREATED_DATE:
+      return {
+        ...state,
+        jira: {
+          ...state.jira,
+          fetching: true,
+          filter: { skip: 0, limit: 10, dateOrder: action.payload }
+        }
+      };
+    case CHANGE_JIRA_TICKET_ROWS_PER_PAGE:
+      return {
+        ...state,
+        jira: {
+          ...state.jira,
+          fetching: true,
+          filter: {
+            ...state.jira.filter,
+            limit: action.payload
+          }
+        }
+      };
+    case FETCH_RECENT_DEPLOYMENTS_SUCCESS:
+      let { total: deploymentsTotal, items } = action.payload;
+      return {
+        ...state,
+        deployments: {
+          ...state.deployments,
+          total: deploymentsTotal || 0,
+          items: items || [],
+          error: null,
+          fetching: false
+        }
+      };
+    case FETCH_RECENT_DEPLOYMENTS_FAILED:
+      return {
+        ...state,
+        deployments: {
+          ...state.deployments,
+          error: "An error occured while fetching data",
+          fetching: false
+        }
+      };
+    case CHANGE_RECENT_DEPLOYMENTS_DURATION:
+      return {
+        ...state,
+        deployments: {
+          ...state.deployments,
+          filter: {
+            ...action.payload
+          },
+          fetching: true
+        }
+      };
+    case FETCH_CLIENT_MSR:
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          fetching: true
+        }
+      };
+    case FETCH_CLIENT_MSR_SUCCESS:
+      let { datasets } = action.payload;
+      let datasetObj = chartDataSetBuilder(
+        datasets,
+        state.clientMSR.filter.days
+      );
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          dataSet: {
+            ...datasetObj
+          },
+          error: null,
+          fetching: false
+        }
+      };
+    case FETCH_CLIENT_MSR_FAILED:
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          error: "An error occured",
+          fetching: false
+        }
+      };
+    case CHANGE_CLIENT_MSR_DAYS:
+      let msrDuration = action.payload;
+      return {
+        ...state,
+        clientMSR: {
+          ...state.clientMSR,
+          filter: {
+            // Get deployments of last 7 days
+            from: moment()
+              .subtract({ days: msrDuration })
+              .valueOf(),
+            to: moment().valueOf(),
+            days: msrDuration
+          }
+        }
+      };
+    case FETCH_SDK_MSR:
+      return {
+        ...state,
+        sdkMSR: {
+          ...state.sdkMSR,
+          fetching: true
+        }
+      };
+    case FETCH_SDK_MSR_SUCCESS:
+      let sdkMSRDataset = action.payload;
+      return {
+        ...state,
+        sdkMSR: {
+          ...state.sdkMSR,
+          fetching: false,
+          ...sdkDataSetBuilder(sdkMSRDataset),
+          error: null
+        }
+      };
+    case FETCH_SDK_MSR_FAILED:
+      return {
+        ...state,
+        sdkMSR: {
+          ...state.sdkMSR,
+          fetching: false,
+          error: "An error occured"
         }
       };
     default:
       return state;
   }
+};
+
+const chartDataSetBuilder = (datasets = [], days) => {
+  let labels = [...new Array(days)].map((i, idx) =>
+    moment()
+      .startOf("day")
+      .subtract(days - idx, "days")
+      .format("DD MMM")
+  );
+  let backgroundColors = palette("tol", datasets.length).map(hex => `#${hex}`);
+  datasets = datasets.map((itm, idx) => ({
+    ...itm,
+    backgroundColor: backgroundColors[idx]
+  }));
+  return { datasets, labels };
+};
+
+const sdkDataSetBuilder = sdkMSRDataset => {
+  let datasetLen = sdkMSRDataset.length;
+  let backgroundColor = palette("tol", datasetLen).map(hex => `#${hex}`);
+  let data = [...new Array(datasetLen)];
+  let labels = [...new Array(datasetLen)];
+  for (let idx = 0; idx < datasetLen; idx++) {
+    data[idx] = sdkMSRDataset[idx].value;
+    labels[idx] = sdkMSRDataset[idx].title;
+    sdkMSRDataset[idx] = {
+      ...sdkMSRDataset[idx],
+      color: backgroundColor[idx]
+    };
+  }
+  return {
+    dataSet: sdkMSRDataset,
+    pieChartData: {
+      datasets: [
+        {
+          data,
+          backgroundColor
+        }
+      ],
+      labels
+    }
+  };
 };
 
 export default dashboardReducer;

@@ -6,10 +6,9 @@ import ErrorRate from "./components/ErrorRate";
 import TotalUsers from "./components/TotalUsers";
 import Latency from "./components/Latency";
 import ErrorBudget from "./components/ErrorBudget";
-import LatestSales from "./components/LatestSales/LatestSales";
-import UsersByDevice from "./components/LatestSales/LatestSales";
-import LatestProducts from "./components/LatestProducts/LatestProducts";
-import LatestOrders from "./components/MSRJiraTickets";
+import ClientMSR from "././components/ClientMSR";
+import SdkMSR from "./components/SdkMSR";
+import Deployments from "./components/Deployments";
 import MSRJiraTickets from "./components/MSRJiraTickets";
 
 const useStyles = makeStyles(theme => ({
@@ -20,7 +19,6 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <Grid container spacing={4}>
@@ -37,13 +35,13 @@ const Dashboard = () => {
           <ErrorBudget />
         </Grid>
         <Grid item lg={8} md={12} xl={9} xs={12}>
-          <LatestSales />
+          <ClientMSR />
         </Grid>
         <Grid item lg={4} md={6} xl={3} xs={12}>
-          <UsersByDevice />
+          <SdkMSR />
         </Grid>
         <Grid item lg={4} md={6} xl={3} xs={12}>
-          <LatestProducts />
+          <Deployments />
         </Grid>
         <Grid item lg={8} md={12} xl={9} xs={12}>
           <MSRJiraTickets />

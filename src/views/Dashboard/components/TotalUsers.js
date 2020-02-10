@@ -30,15 +30,22 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     alignItems: "center"
   },
-  differenceIcon: {
-    color: theme.palette.success.dark
+  differenceIconSuccess: {
+    color: theme.palette.success.main
   },
-  differenceValue: {
-    color: theme.palette.success.dark,
+  differenceIconError: {
+    color: theme.palette.error.main
+  },
+  differenceValueSuccess: {
+    color: theme.palette.success.main,
+    marginRight: theme.spacing(1)
+  },
+  differenceValueError: {
+    color: theme.palette.error.main,
     marginRight: theme.spacing(1)
   },
   error: {
-    color: "red"
+    color: theme.palette.error.main
   }
 }));
 
@@ -49,7 +56,8 @@ const TotalUsers = ({ totalUsers, fetchTotalUsers }) => {
   return (
     <MetricCard
       useStyles={useStyles}
-      variant="99.5%"
+      variant={totalUsers.value || ""}
+      trend={totalUsers.trend || {}}
       title="TOTAL USERS"
       fetching={totalUsers.fetching}
       error={totalUsers.error}
