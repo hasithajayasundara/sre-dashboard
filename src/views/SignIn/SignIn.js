@@ -126,7 +126,8 @@ const SignIn = ({ history, signedIn, fetchGoogleProfile }) => {
     window.gapi.load("auth2", () => {
       window.gapi.auth2
         .init({
-          client_id: ""
+          client_id:
+            "358281530283-bum1up22bs7325ikhklshdt1nefeqvt8.apps.googleusercontent.com"
         })
         .then(() => {
           window.gapi.signin2.render("sre-signin", {

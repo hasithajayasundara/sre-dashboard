@@ -212,7 +212,7 @@ const dashboardReducer = (state = initialState, action) => {
       };
     case FETCH_ERROR_BUDGET_FAILED:
       errorBudget.fetching = false;
-      totalUsers.error = "An error occured while fetching data.";
+      errorBudget.error = "An error occured while fetching data.";
       return {
         ...state,
         metrics: {

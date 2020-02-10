@@ -59,6 +59,7 @@ const ErrorRate = ({ errorRate, fetchErrorRate }) => {
       variant={errorRate.value || ""}
       trend={errorRate.trend || {}}
       title="ERROR RATE"
+      error={errorRate.error}
       fetching={errorRate.fetching}
     ></MetricCard>
   );
@@ -68,7 +69,4 @@ function mapStateToProps({ dashboard }) {
   return { errorRate: dashboard.metrics.errorRate };
 }
 
-export default connect(
-  mapStateToProps,
-  { fetchErrorRate }
-)(ErrorRate);
+export default connect(mapStateToProps, { fetchErrorRate })(ErrorRate);

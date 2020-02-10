@@ -54,6 +54,9 @@ const useStyles = makeStyles(theme => ({
   differenceValueError: {
     color: theme.palette.error.main,
     marginRight: theme.spacing(1)
+  },
+  error: {
+    color: "white"
   }
 }));
 
@@ -80,7 +83,4 @@ function mapStateToProps({ dashboard }) {
   return { errorBudget: dashboard.metrics.errorBudget };
 }
 
-export default connect(
-  mapStateToProps,
-  { fetchErrorBudget }
-)(ErrorBudget);
+export default connect(mapStateToProps, { fetchErrorBudget })(ErrorBudget);
