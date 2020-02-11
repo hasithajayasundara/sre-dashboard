@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/styles';
-import LanguageIcon from '@material-ui/icons/Language';
+import React, { useState } from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { makeStyles } from "@material-ui/styles";
 import {
   Card,
   CardActions,
@@ -18,9 +16,9 @@ import {
   TableRow,
   Typography,
   TablePagination
-} from '@material-ui/core';
+} from "@material-ui/core";
 
-import { getInitials } from 'helpers';
+import { getInitials } from "helpers";
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -31,14 +29,14 @@ const useStyles = makeStyles(theme => ({
     minWidth: 1050
   },
   nameContainer: {
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center"
   },
   avatar: {
     marginRight: theme.spacing(2)
   },
   actions: {
-    justifyContent: 'flex-end'
+    justifyContent: "flex-end"
   }
 }));
 
@@ -94,10 +92,7 @@ const SLOTable = props => {
   };
 
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
@@ -123,7 +118,7 @@ const SLOTable = props => {
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
-                          src='/images/icons/globe.jpg'
+                          src="/images/icons/globe.jpg"
                         >
                           {getInitials(user.name)}
                         </Avatar>
@@ -131,13 +126,9 @@ const SLOTable = props => {
                       </div>
                     </TableCell>
                     <TableCell>{user.latencyValue}</TableCell>
-                    <TableCell>
-                      {user.latencySLO}
-                    </TableCell>
+                    <TableCell>{user.latencySLO}</TableCell>
                     <TableCell>{user.errorValue}</TableCell>
-                    <TableCell>
-                      {user.errorSLO}
-                    </TableCell>
+                    <TableCell>{user.errorSLO}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

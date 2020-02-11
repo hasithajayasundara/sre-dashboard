@@ -1,17 +1,19 @@
-import 'date-fns';
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import DateFnsUtils from '@date-io/date-fns';
+import "date-fns";
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import TimeIcon from '@material-ui/icons/Timer';
+  KeyboardDatePicker
+} from "@material-ui/pickers";
+import TimeIcon from "@material-ui/icons/Timer";
 
-export default function MaterialUIPickers() {
+const DatePicker = () => {
   // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
+  const [selectedDate, setSelectedDate] = React.useState(
+    new Date("2014-08-18T21:11:54")
+  );
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -28,7 +30,7 @@ export default function MaterialUIPickers() {
           value={selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change date',
+            "aria-label": "change date"
           }}
         />
         <KeyboardTimePicker
@@ -38,7 +40,7 @@ export default function MaterialUIPickers() {
           value={selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change time',
+            "aria-label": "change time"
           }}
           keyboardIcon={<TimeIcon />}
         />
@@ -50,7 +52,7 @@ export default function MaterialUIPickers() {
           value={selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change date',
+            "aria-label": "change date"
           }}
         />
         <KeyboardTimePicker
@@ -60,11 +62,13 @@ export default function MaterialUIPickers() {
           value={selectedDate}
           onChange={handleDateChange}
           KeyboardButtonProps={{
-            'aria-label': 'change time',
+            "aria-label": "change time"
           }}
           keyboardIcon={<TimeIcon />}
         />
       </Grid>
     </MuiPickersUtilsProvider>
   );
-}
+};
+
+export default DatePicker;
