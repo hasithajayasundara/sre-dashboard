@@ -1,27 +1,9 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import moment from "moment";
-import PerfectScrollbar from "react-perfect-scrollbar";
 import { makeStyles } from "@material-ui/styles";
-import LanguageIcon from "@material-ui/icons/Language";
 import Graph from "react-graph-vis";
-import {
-  Card,
-  CardActions,
-  CardContent,
-  Avatar,
-  Checkbox,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-  TablePagination
-} from "@material-ui/core";
-
-import { getInitials } from "helpers";
+import { Card, CardContent } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {},
