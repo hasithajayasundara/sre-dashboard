@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import mockData from '../UserList/data';
+import ServiceTable from "./components/ServiceTable";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,6 +25,7 @@ const HealthDashboard = () => {
           md={12}
           xs={12}
         >
+          <ServiceTable />
         </Grid>
       </Grid>
     </div>
