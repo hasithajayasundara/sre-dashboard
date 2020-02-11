@@ -22,112 +22,106 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { Profile, SidebarNav, UpgradePlan } from './components';
 
 const useStyles = makeStyles(theme => ({
-  drawer: {
-    width: 240,
-    [theme.breakpoints.up('lg')]: {
-      marginTop: 64,
-      height: 'calc(100% - 64px)'
-    }
-  },
-  root: {
-    backgroundColor: theme.palette.white,
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-    padding: theme.spacing(2)
-  },
-  divider: {
-    margin: theme.spacing(2, 0)
-  },
-  nav: {
-    marginBottom: theme.spacing(2)
-  }
+    drawer: {
+        width: 240,
+        [theme.breakpoints.up('lg')]: {
+            marginTop: 64,
+            height: 'calc(100% - 64px)',
+        },
+    },
+    root: {
+        backgroundColor: theme.palette.white,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        padding: theme.spacing(2),
+    },
+    divider: {
+        margin: theme.spacing(2, 0),
+    },
+    nav: {
+        marginBottom: theme.spacing(2),
+    },
 }));
 
 const Sidebar = props => {
-  const { open, variant, onClose, className, ...rest } = props;
+    const { open, variant, onClose, className, ...rest } = props;
 
-  const classes = useStyles();
+    const classes = useStyles();
 
-  const pages = [
-    {
-      title: 'Dashboard',
-      href: '/dashboard',
-      icon: <DashboardIcon />,
-      disabled: false
-    },
-    {
-      title: 'SLO',
-      href: '/slo',
-      icon: <TimeIcon />,
-      disabled: false
-    },
-    {
-      title: 'Health Dashboard',
-      href: '/health',
-      icon: <LocalHospitalIcon />,
-      disabled: true
-    },
-    {
-      title: 'Usage',
-      href: '/usage',
-      icon: <PeopleIcon />,
-      disabled: false
-    },
-    {
-      title: 'Support Engineering',
-      href: '/support',
-      icon: <SettingPhoneIcon />,
-      disabled: true
-    },
-    {
-      title: 'Quality Engineering',
-      href: '/quality',
-      icon: <VerifiedUserIcon />,
-      disabled: true
-    },
-    {
-      title: 'Monthly Service Report',
-      href: '/msr',
-      icon: <DescriptionlIcon />,
-      disabled: false
-    },
-    {
-      title: 'SLA Violations',
-      href: '/sla',
-      icon: <WarningIcon />,
-      disabled: true
-    }
-  ];
+    const pages = [
+        {
+            title: 'Dashboard',
+            href: '/dashboard',
+            icon: <DashboardIcon />,
+            disabled: false,
+        },
+        {
+            title: 'SLO',
+            href: '/slo',
+            icon: <TimeIcon />,
+            disabled: false,
+        },
+        {
+            title: 'Health Dashboard',
+            href: '/health',
+            icon: <LocalHospitalIcon />,
+            disabled: true,
+        },
+        {
+            title: 'Usage',
+            href: '/usage',
+            icon: <PeopleIcon />,
+            disabled: false,
+        },
+        {
+            title: 'Support Engineering',
+            href: '/support',
+            icon: <SettingPhoneIcon />,
+            disabled: true,
+        },
+        {
+            title: 'Quality Engineering',
+            href: '/quality',
+            icon: <VerifiedUserIcon />,
+            disabled: true,
+        },
+        {
+            title: 'Monthly Service Report',
+            href: '/msr',
+            icon: <DescriptionlIcon />,
+            disabled: false,
+        },
+        {
+            title: 'SLA Violations',
+            href: '/sla',
+            icon: <WarningIcon />,
+            disabled: true,
+        },
+    ];
 
-  return (
-    <Drawer
-      anchor="left"
-      classes={{ paper: classes.drawer }}
-      onClose={onClose}
-      open={open}
-      variant={variant}
-    >
-      <div
-        {...rest}
-        className={clsx(classes.root, className)}
-      >
-        <Profile />
-        <Divider className={classes.divider} />
-        <SidebarNav
-          className={classes.nav}
-          pages={pages}
-        />
-      </div>
-    </Drawer>
-  );
+    return (
+        <Drawer
+            anchor="left"
+            classes={{ paper: classes.drawer }}
+            onClose={onClose}
+            open={open}
+            variant={variant}
+        >
+            <div {...rest} className={clsx(classes.root, className)}>
+                <Profile />
+                <Divider className={classes.divider} />
+                <SidebarNav className={classes.nav} pages={pages} />
+            </div>
+        </Drawer>
+    );
 };
 
 Sidebar.propTypes = {
-  className: PropTypes.string,
-  onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired,
-  variant: PropTypes.string.isRequired
+    className: PropTypes.string,
+    onClose: PropTypes.func,
+    open: PropTypes.bool.isRequired,
+    variant: PropTypes.string.isRequired,
 };
 
 export default Sidebar;
