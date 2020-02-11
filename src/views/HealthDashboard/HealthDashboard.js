@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import mockData from '../UserList/data';
+import ServiceTable from "./components/ServiceTable";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -13,15 +14,22 @@ const useStyles = makeStyles(theme => ({
 const HealthDashboard = () => {
     const classes = useStyles();
 
-    return (
-        <div className={classes.root}>
-            <Grid container spacing={4}>
-                <Grid item md={12} xs={12}>
-                    <ServiceTable />
-                </Grid>
-            </Grid>
-        </div>
-    );
+  return (
+    <div className={classes.root}>
+      <Grid
+        container
+        spacing={4}
+      >
+        <Grid
+          item
+          md={12}
+          xs={12}
+        >
+          <ServiceTable />
+        </Grid>
+      </Grid>
+    </div>
+  );
 };
 
 export default HealthDashboard;
