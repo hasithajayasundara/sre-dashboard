@@ -146,9 +146,9 @@ const SLOGraph = props => {
   );
 };
 
-SLOGraph.propTypes = {
-  className: PropTypes.string,
-  users: PropTypes.array.isRequired
-};
+// SLOGraph.propTypes = {
+//   className: PropTypes.string,
+//   users: PropTypes.array.isRequired
+// };
 
 export default SLOGraph;

@@ -8,12 +8,11 @@ import {
   KeyboardDatePicker
 } from "@material-ui/pickers";
 import TimeIcon from "@material-ui/icons/Timer";
+import { connect } from "react-redux";
+import { setSLOTime } from "../../../actions/slo";
 
-const DatePicker = () => {
-  // The first commit of Material-UI
-  const [selectedDate, setSelectedDate] = React.useState(
-    new Date("2014-08-18T21:11:54")
-  );
+const DatePicker = ({ timeRange, setSLOTime }) => {
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
 
   const handleDateChange = date => {
     setSelectedDate(date);
@@ -27,8 +26,8 @@ const DatePicker = () => {
           id="date-picker-dialog-start"
           label="Start Date"
           format="MM/dd/yyyy"
-          value={selectedDate}
-          onChange={handleDateChange}
+          value={timeRange.from}
+          onChange={date => setSLOTime({ date, attr: "from" })}
           KeyboardButtonProps={{
             "aria-label": "change date"
           }}
@@ -37,8 +36,8 @@ const DatePicker = () => {
           margin="normal"
           id="time-picker-start"
           label="Start Time"
-          value={selectedDate}
-          onChange={handleDateChange}
+          value={timeRange.from}
+          onChange={date => setSLOTime({ date, attr: "from" })}
           KeyboardButtonProps={{
             "aria-label": "change time"
           }}
@@ -49,8 +48,8 @@ const DatePicker = () => {
           id="date-picker-dialog-end"
           label="End Date"
           format="MM/dd/yyyy"
-          value={selectedDate}
-          onChange={handleDateChange}
+          value={timeRange.to}
+          onChange={date => setSLOTime({ date, attr: "to" })}
           KeyboardButtonProps={{
             "aria-label": "change date"
           }}
@@ -59,8 +58,8 @@ const DatePicker = () => {
           margin="normal"
           id="time-picker-end"
           label="End Time"
-          value={selectedDate}
-          onChange={handleDateChange}
+          value={timeRange.to}
+          onChange={date => setSLOTime({ date, attr: "to" })}
           KeyboardButtonProps={{
             "aria-label": "change time"
           }}
@@ -71,4 +70,8 @@ const DatePicker = () => {
   );
 };
 
-export default DatePicker;
+function mapStateToProps({ slo }) {
+  return { timeRange: slo.filters.timeRange };
+}
+
+export default connect(mapStateToProps, { setSLOTime })(DatePicker);

@@ -57,3 +57,24 @@ export const FETCH_GOOGLE_PROFILE_FAILED = "FETCH_GOOGLE_PROFILE_FAILED";
 /**
  * ================== SignIn Tasks Ends ============================
  */
+
+/**
+ * ================== SLO Tasks ============================
+ */
+export const FETCH_SLO_FILTERS = "FETCH_SLO_FILTERS";
+export const FETCH_SLO_FILTERS_SUCCESS = "FETCH_SLO_FILTERS_SUCCESS";
+export const FETCH_SLO_FILTERS_FAILED = "FETCH_SLO_FILTERS_FAILED";
+
+export const SET_SLO_TYPE = "SET_SLO_TYPE";
+export const SET_SLO_SERVICE_TYPE = "SET_SERVICE_TYPE";
+export const SET_SLO_TIME_RANGE = "SET_TIME_RANGE";
+export const SET_SLO_TIME_FORMAT = "SET_TIME_FORMAT";
+export const SET_SLO_TIME = "SET_SLO_TIME";
+export const SET_SLO_RELATIVE_TIME = "SET_SLO_RELATIVE_TIME";
+
+export const FETCH_SLO_GRAPH_DATA = "FETCH_SLO_GRAPH_DATA";
+export const FETCH_SLO_GRAPH_DATA_SUCCESS = "FETCH_SLO_GRAPH_DATA_SUCCESS";
+export const FETCH_SLO_GRAPH_DATA_FAILED = "FETCH_SLO_GRAPH_DATA_FAILED";
+/**
+ * ================== SLO Tasks Ends ============================
+ */

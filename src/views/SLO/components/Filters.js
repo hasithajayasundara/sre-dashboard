@@ -10,16 +10,25 @@ import {
   Grid,
   Divider,
   FormControlLabel,
-  Checkbox,
   Typography,
   Button,
   RadioGroup,
-  Radio
+  Radio,
+  Checkbox
 } from "@material-ui/core";
 import DatePicker from "./DatePicker";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import { connect } from "react-redux";
+
+import {
+  setSLOType,
+  setSLOServiceType,
+  setSLOTimeFormat,
+  setSLORelativeTime,
+  fetchSLOGraphData
+} from "../../../actions/slo";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -29,17 +38,20 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Filters = props => {
-  const { className, filters, ...rest } = props;
-
+const Filters = ({
+  filters,
+  sloTypes,
+  sloServices,
+  relativeTimeSelected,
+  relativeTimeOptions,
+  relativeTimeValue,
+  setSLOType,
+  setSLOServiceType,
+  setSLOTimeFormat,
+  setSLORelativeTime,
+  fetchSLOGraphData
+}) => {
   const [showFilters, setShowFilters] = useState(true);
-  const [selectedSLOType, setSelectedSLOType] = useState(
-    Object.keys(filters)[0]
-  );
-  const [selectedValues, setSelectedValues] = useState(
-    filters[selectedSLOType]
-  );
-  const [relativeTimeSelected, setRelativeTimeSelected] = useState(false);
 
   const classes = useStyles();
 
@@ -52,18 +64,6 @@ const Filters = props => {
   };
 
   /***
-   * Capture the changing radio button events
-   * @param e The event triggered by the changing Radio Button
-   */
-  const onRadioButtonChange = e => {
-    const { value } = e.target;
-    // set the current selected MSR Type
-    setSelectedSLOType(value);
-    // set the values to be displayed for each MSR type
-    setSelectedValues(filters[value]);
-  };
-
-  /***
    * Capture the changing event of the checkbox button
    * @param e
    */
@@ -72,20 +72,8 @@ const Filters = props => {
     console.log(e);
   };
 
-  /***
-   * When user switches between absolute and relative times
-   */
-  const onTimeTypeClicked = () => {
-    setRelativeTimeSelected(prev => !prev);
-  };
-
-  /***
-   * This will process the filters and display the MSR data
-   */
-  const onApplyFiltersClick = () => {};
-
   return (
-    <Card {...rest} className={clsx(classes.root, className)}>
+    <Card className={clsx(classes.root)}>
       <form>
         <Collapse in={showFilters}>
           <CardContent>
@@ -95,14 +83,14 @@ const Filters = props => {
                   SLO Type
                 </Typography>
                 <RadioGroup aria-label="slo-type" name="slo-type">
-                  {Object.keys(filters).map((filter, index) => (
+                  {sloTypes.map((type, index) => (
                     <FormControlLabel
-                      checked={filter === selectedSLOType}
-                      control={<Radio color="primary" key={index} />}
-                      key={index}
-                      label={filter}
-                      onChange={onRadioButtonChange}
-                      value={filter}
+                      checked={type.checked}
+                      control={<Radio color="primary" key={type.id} />}
+                      key={type.id}
+                      label={type.name}
+                      onChange={() => setSLOType({ id: type.id, index })}
+                      value={type.id}
                     />
                   ))}
                 </RadioGroup>
@@ -111,17 +99,19 @@ const Filters = props => {
                 <Typography gutterBottom variant="h6">
                   Services
                 </Typography>
-                {selectedValues.map((value, index) => (
+                {sloServices.map((service, index) => (
                   <FormControlLabel
                     control={
                       <Checkbox
                         color="primary"
-                        onChange={onCheckBoxChange}
-                        defaultChecked //
+                        checked={service.checked}
+                        onChange={() =>
+                          setSLOServiceType({ id: service.id, index })
+                        }
                       />
                     }
-                    key={index}
-                    label={value}
+                    key={service.id}
+                    label={service.name}
                   />
                 ))}
               </Grid>
@@ -137,25 +127,17 @@ const Filters = props => {
                     </InputLabel>
                     <Select
                       native
-                      value={"state.age"}
-                      onChange={onCheckBoxChange}
-                      inputProps={{
-                        name: "age",
-                        id: "age-native-simple"
-                      }}
+                      value={relativeTimeValue}
+                      onChange={event => setSLORelativeTime(event.target.value)}
                     >
-                      <option value={88}>Last 5 mins</option>
-                      <option value={88}>Last 15 mins</option>
-                      <option value={88}>Last 30 mins</option>
-                      <option value={88}>Last 1 hour</option>
-                      <option value={88}>Last 6 hour</option>
-                      <option value={88}>Last 12 hour</option>
-                      <option value={88}>Last 1 day</option>
-                      <option value={88}>Last 1 week</option>
-                      <option value={88}>Last 1 month</option>
-                      <option value={88}>Last 3 months</option>
-                      <option value={88}>Last 6 months</option>
-                      <option value={88}>Last 1 year</option>
+                      {relativeTimeOptions.map(option => (
+                        <option
+                          key={`relative-time-${option.value}`}
+                          value={option.value}
+                        >
+                          {option.name}
+                        </option>
+                      ))}
                     </Select>
                   </FormControl>
                 )}
@@ -163,7 +145,7 @@ const Filters = props => {
                 <br />
                 <Button
                   color="primary"
-                  onClick={onTimeTypeClicked}
+                  onClick={setSLOTimeFormat}
                   variant="outlined"
                 >
                   {relativeTimeSelected
@@ -178,8 +160,8 @@ const Filters = props => {
         <CardActions>
           <Button
             color="primary"
-            onClick={onApplyFiltersClick}
             variant="outlined"
+            onClick={() => fetchSLOGraphData(filters)}
           >
             Apply Filters
           </Button>
@@ -196,9 +178,27 @@ const Filters = props => {
   );
 };
 
-Filters.propTypes = {
-  className: PropTypes.string,
-  filters: PropTypes.object.isRequired
-};
+// Filters.propTypes = {
+//   className: PropTypes.string,
+//   filters: PropTypes.Array.isRequired
+// };
 
-export default Filters;
+function mapStateToProps({ slo }) {
+  let { sloTypes, sloServices, timeRange } = slo.filters;
+  return {
+    filters: slo.sloGraph.filter,
+    sloTypes,
+    sloServices,
+    relativeTimeSelected: timeRange.relativeTimeSelected,
+    relativeTimeOptions: timeRange.relativeTimeOptions,
+    relativeTimeValue: timeRange.relativeTimeValue
+  };
+}
+
+export default connect(mapStateToProps, {
+  setSLOType,
+  setSLOServiceType,
+  setSLOTimeFormat,
+  setSLORelativeTime,
+  fetchSLOGraphData
+})(Filters);
