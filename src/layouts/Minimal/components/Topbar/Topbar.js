@@ -6,41 +6,41 @@ import { makeStyles } from '@material-ui/styles';
 import { AppBar, Toolbar } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
-  root: {
-    boxShadow: 'none'
-  },
-  img: {
-    width: 150
-  }
+    root: {
+        boxShadow: 'none',
+    },
+    img: {
+        width: 150,
+    },
 }));
 
 const Topbar = props => {
-  const { className, ...rest } = props;
+    const { className, ...rest } = props;
 
-  const classes = useStyles();
+    const classes = useStyles();
 
-  return (
-    <AppBar
-      {...rest}
-      className={clsx(classes.root, className)}
-      color="primary"
-      position="fixed"
-    >
-      <Toolbar>
-        <RouterLink to="/">
-          <img
-            className={classes.img}
-            alt="Logo"
-            src="/images/logos/sre-logo.png"
-          />
-        </RouterLink>
-      </Toolbar>
-    </AppBar>
-  );
+    return (
+        <AppBar
+            {...rest}
+            className={clsx(classes.root, className)}
+            color="primary"
+            position="fixed"
+        >
+            <Toolbar>
+                <RouterLink to="/">
+                    <img
+                        className={classes.img}
+                        alt="Logo"
+                        src="/images/logos/sre-logo.png"
+                    />
+                </RouterLink>
+            </Toolbar>
+        </AppBar>
+    );
 };
 
 Topbar.propTypes = {
-  className: PropTypes.string
+    className: PropTypes.string,
 };
 
 export default Topbar;

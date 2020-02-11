@@ -1,51 +1,65 @@
-import React, { useState } from "react";
-import { makeStyles } from "@material-ui/styles";
-import { Grid } from "@material-ui/core";
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import { Grid, CircularProgress } from '@material-ui/core';
+import { connect } from 'react-redux';
 
-import Filters from "./components/Filters";
-import SLOGraph from "./components/SLOGraph";
-import SLOTable from "./components/SLOTable";
-import SLOChart from "./components/SLOChart";
+import Filters from './components/Filters';
+import SLOGraph from './components/SLOGraph';
+import SLOTable from './components/SLOTable';
+import SLOChart from './components/SLOChart';
 
-import mockData from "../UserList/data";
+import { fetchSLOFilters } from '../../actions/slo';
+
+import mockData from '../UserList/data';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(4)
-  }
+    root: {
+        padding: theme.spacing(4),
+    },
+    circularProgress: {
+        width: '100%',
+        height: '10vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
 }));
 
-const SLO = () => {
-  const classes = useStyles();
-  const [users] = useState(mockData);
+const SLO = ({ fetchingFilters, filtersError, fetchSLOFilters }) => {
+    const classes = useStyles();
+    const [users] = useState(mockData);
+    useEffect(() => {
+        fetchSLOFilters();
+    }, [fetchSLOFilters]);
 
-  const [filters] = useState({
-    Service: ["Assets", "Events", "Files", "Timeseries"],
-    Application: ["OpsInt", "Console"],
-    Client: ["AkerBP"],
-    SDK: ["Python", "Scala", "JavaScript"],
-    Resource: ["Core Services", "3D"],
-    Function: ["Store", "Contextualize", "Analyze"],
-    "Batch Job": ["Jet Fire", "Search Loader"],
-    Extractor: ["Extractor 1", "Extractor 2"],
-    "Data Level": ["Data Integration", "Data Inventory", "Access Management"]
-  });
-
-  return (
-    <div className={classes.root}>
-      <Grid container spacing={4}>
-        <Grid item md={12} xs={12}>
-          <Filters filters={filters} />
-          <br />
-          <SLOChart />
-          <br />
-          <SLOTable users={users} />
-          <br />
-          <SLOGraph />
-        </Grid>
-      </Grid>
-    </div>
-  );
+    return (
+        <div className={classes.root}>
+            <Grid container spacing={4}>
+                <Grid item md={12} xs={12}>
+                    {fetchingFilters ? (
+                        <div className={classes.circularProgress}>
+                            <CircularProgress />
+                        </div>
+                    ) : filtersError ? null : (
+                        <React.Fragment>
+                            <Filters />
+                            <br />
+                            <SLOChart />
+                            <br />
+                        </React.Fragment>
+                    )}
+                    <SLOTable users={users} />
+                    <br />
+                    <SLOGraph />
+                </Grid>
+            </Grid>
+        </div>
+    );
 };
 
-export default SLO;
+function mapStateToProps({ slo }) {
+    let { fetching: fetchingFilters, error: filtersError } = slo.filters;
+    return { fetchingFilters, filtersError };
+}
+
+export default connect(mapStateToProps, { fetchSLOFilters })(SLO);
